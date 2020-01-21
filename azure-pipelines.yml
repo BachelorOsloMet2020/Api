@@ -50,10 +50,10 @@ steps:
     targetType: inline
     #workingDirectory: ''
     script: |
-      Write-Host $(Build.ArtifactStagingDirectory)
-      Write-Host $(Agent.BuildDirectory)
-      Write-Host $(Agent.WorkFolder)
-      Get-ChildItem -Recurse
+      Get-ChildItem -Recurse -Path $(Agent.WorkFolder)
+      Get-ChildItem -Recurse -Path $(Agent.BuildDirectory)
+      Get-ChildItem -Recurse -Path $(Build.ArtifactStagingDirectory)
+      Get-ChildItem -Recurse -Path $(Build.SourcesDirectory)
 
 
 #- task: PublishBuildArtifacts@1
