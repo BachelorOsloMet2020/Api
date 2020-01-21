@@ -28,41 +28,47 @@ steps:
 #    #sshPassphrase: # Optional
 #   sshKeySecureFile: '$(azureSSH.secureFilePath)'
 
-- script: |
-    sudo update-alternatives --set php /usr/bin/php$(phpVersion)
-    sudo update-alternatives --set phar /usr/bin/phar$(phpVersion)
-    sudo update-alternatives --set phpdbg /usr/bin/phpdbg$(phpVersion)
-    sudo update-alternatives --set php-cgi /usr/bin/php-cgi$(phpVersion)
-    sudo update-alternatives --set phar.phar /usr/bin/phar.phar$(phpVersion)
-    php -version
-  displayName: 'Use PHP version $(phpVersion)'
+#- script: |
+#    sudo update-alternatives --set php /usr/bin/php$(phpVersion)
+#    sudo update-alternatives --set phar /usr/bin/phar$(phpVersion)
+#    sudo update-alternatives --set phpdbg /usr/bin/phpdbg$(phpVersion)
+#    sudo update-alternatives --set php-cgi /usr/bin/php-cgi$(phpVersion)
+#    sudo update-alternatives --set phar.phar /usr/bin/phar.phar$(phpVersion)
+#    php -version
+#  displayName: 'Use PHP version $(phpVersion)'
 
-- script: composer install --no-interaction --prefer-dist
-  displayName: 'composer install'
+#- script: composer install --no-interaction --prefer-dist
+#  displayName: 'composer install'
 
 - script: phpunit --coverage-clover result.xml --log-junit test-result.xml
   displayName: 'Run tests with phpunit'
   continueOnError: true
 
-#- task: PowerShell@2
-#  displayName: "Re-map"
+- task: PowerShell@2
+  displayName: "Re-map"
+  inputs:
+    targetType: inline
+    #workingDirectory: ''
+    script: |
+      Write-Host $(Build.ArtifactStagingDirectory)
+      Write-Host $(Agent.BuildDirectory)
+      Write-Host $(Agent.WorkFolder)
+      Get-ChildItem -Recurse
+
+
+#- task: PublishBuildArtifacts@1
+#  displayName: 'Publish artifact: drop'
 #  inputs:
-#    targetType: inline
-#    wor
+#    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+#  #condition: succeededOrFailed()
+#  continueOnError: true
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish artifact: drop'
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-  #condition: succeededOrFailed()
-  continueOnError: true
-
-- task: CopyFilesOverSSH@0
-  inputs:
-    sshEndpoint: 'Dyrebar_Deploy'
-    targetFolder: '/var/www/html'
-    sourceFolder: '$(Agent.ArtifactStagingDirectory)/s'
-    contents: '**'
-    overwrite: true
-    failOnEmptySource: true
-  continueOnError: true
+#- task: CopyFilesOverSSH@0
+#  inputs:
+#    sshEndpoint: 'Dyrebar_Deploy'
+#   targetFolder: '/var/www/html'
+#    sourceFolder: '$(Agent.ArtifactStagingDirectory)/s'
+#    contents: '**'
+#   overwrite: true
+#   failOnEmptySource: true
+#  continueOnError: true
