@@ -40,7 +40,7 @@ steps:
 #- script: composer install --no-interaction --prefer-dist
 #  displayName: 'composer install'
 
-- script: vendor/bin/phpunit --log-junit tests/Results/TEST-phpunit-junit.xml 
+- script: vendor/bin/phpunit --log-junit TEST-phpunit-junit.xml 
 #phpunit --coverage-clover result.xml --log-junit test-result.xml
   displayName: 'Run tests with phpunit'
   continueOnError: true
