@@ -48,7 +48,7 @@ steps:
   inputs:
     sshEndpoint: 'Dyrebar_Deploy'
     targetFolder: '/var/www/html'
-    sourceFolder: '$(Agent.BuildDirectory)'
+    sourceFolder: '$(Agent.BuildDirectory)\s!(vendor|composer.*|azure-pipelines.yml'
     contents: '**'
     overwrite: true
     failOnEmptySource: true
