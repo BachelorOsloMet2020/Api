@@ -44,11 +44,24 @@ steps:
   displayName: 'Run tests with phpunit'
   continueOnError: true
 
+#- task: PowerShell@2
+#  displayName: "Re-map"
+#  inputs:
+#    targetType: inline
+#    wor
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish artifact: drop'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+  #condition: succeededOrFailed()
+  continueOnError: true
+
 - task: CopyFilesOverSSH@0
   inputs:
     sshEndpoint: 'Dyrebar_Deploy'
     targetFolder: '/var/www/html'
-    sourceFolder: '$(Agent.BuildDirectory)/s/!(vendor|composer.*|azure-pipelines.yml)'
+    sourceFolder: '$(Agent.ArtifactStagingDirectory)/s'
     contents: '**'
     overwrite: true
     failOnEmptySource: true
