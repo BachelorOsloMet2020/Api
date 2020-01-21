@@ -50,18 +50,14 @@ steps:
     targetType: inline
     #workingDirectory: ''
     script: |
-      Write-Host "Agent.WorkFolder"
-      Write-Host "#################################################################################"
-      Get-ChildItem -Recurse -Path $(Agent.WorkFolder)
-      Write-Host "Agent.BuildDirectory"
-      Write-Host "#################################################################################"
-      Get-ChildItem -Recurse -Path $(Agent.BuildDirectory)
-      Write-Host "Build.ArtifactStagingDirectory"
-      Write-Host "#################################################################################"
-      Get-ChildItem -Recurse -Path $(Build.ArtifactStagingDirectory)
-      Write-Host "Build.SourcesDirectory"
-      Write-Host "#################################################################################"
-      Get-ChildItem -Recurse -Path $(Build.SourcesDirectory)
+      [string[]]$excludes = @("*.md", "*.yaml", "composer.json", ".git")
+      $Items = Get-ChildItem -Path $(Build.SourcesDirectory) -Exclude $excludes
+      New-Item -Path $(Build.SourcesDirectory) -Name "Artifacts" -ItemType "directory"
+      $ArtifactsDirectory = Join-Path -Path $(Build.SourcesDirectory) -ChildPath "Artifacts"
+      $Items | Copy-Item -Destination $ArtifactsDirectory -Recurse -Container
+      Write-Host $ArtifactsDirectory
+      Write-Host "##vso[task.setvariable variable=ArtifactsDirectory;]$ArtifactsDirectory"
+
 
 
 #- task: PublishBuildArtifacts@1
