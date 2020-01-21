@@ -54,7 +54,10 @@ steps:
       $Items = Get-ChildItem -Path $(Build.SourcesDirectory) -Exclude $excludes
       New-Item -Path $(Build.SourcesDirectory) -Name "Artifacts" -ItemType "directory"
       $ArtifactsDirectory = Join-Path -Path $(Build.SourcesDirectory) -ChildPath "Artifacts"
-      $Items | Copy-Item -Destination $ArtifactsDirectory -Recurse -Container
+      $Items | Copy-Item -Destination $ArtifactsDirectory -Recurse -Container -Verbose
+
+      Get-ChildItem -Path $(ArtifactsDirectory) -Recurse
+
       Write-Host $ArtifactsDirectory
       Write-Host "##vso[task.setvariable variable=ArtifactsDirectory;]$ArtifactsDirectory"
 
