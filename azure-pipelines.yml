@@ -27,7 +27,9 @@ steps:
 - script: composer install --no-interaction --prefer-dist
   displayName: 'composer install'
 
-- script: phpunit --coverage-clover result.xml --log-junit test-result.xml
+- script: |
+    phpunit --version
+    phpunit tests --coverage-clover result.xml --log-junit test-result.xml
   displayName: 'Run tests with phpunit'
   continueOnError: true
 
