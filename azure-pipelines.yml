@@ -50,9 +50,17 @@ steps:
     targetType: inline
     #workingDirectory: ''
     script: |
+      Write-Host "Agent.WorkFolder"
+      Write-Host "#################################################################################"
       Get-ChildItem -Recurse -Path $(Agent.WorkFolder)
+      Write-Host "Agent.BuildDirectory"
+      Write-Host "#################################################################################"
       Get-ChildItem -Recurse -Path $(Agent.BuildDirectory)
+      Write-Host "Build.ArtifactStagingDirectory"
+      Write-Host "#################################################################################"
       Get-ChildItem -Recurse -Path $(Build.ArtifactStagingDirectory)
+      Write-Host "Build.SourcesDirectory"
+      Write-Host "#################################################################################"
       Get-ChildItem -Recurse -Path $(Build.SourcesDirectory)
 
 
