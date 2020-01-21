@@ -58,8 +58,7 @@ steps:
 
       Write-Host $ArtifactsDirectory
       Write-Host "##vso[task.setvariable variable=ArtifactsDirectory;]$ArtifactsDirectory"
-      Write-Host "DevOps Variable $(ArtifactsDirectory) has been created and assigned: " $(ArtifactsDirectory)
-      Get-ChildItem -Path $(ArtifactsDirectory) -Recurse
+      Get-ChildItem -Path $(env:ArtifactsDirectory) -Recurse
 
 
 
