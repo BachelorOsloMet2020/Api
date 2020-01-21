@@ -59,9 +59,6 @@ steps:
       Write-Host $ArtifactsDirectory
       Write-Host "##vso[task.setvariable variable=ArtifactsDirectory]$ArtifactsDirectory"
       Get-ChildItem -Path $ArtifactsDirectory -Recurse
-      Write-Host $(ArtifactsDirectory)
-
-
 
 #- task: PublishBuildArtifacts@1
 #  displayName: 'Publish artifact: drop'
@@ -70,12 +67,12 @@ steps:
 #  #condition: succeededOrFailed()
 #  continueOnError: true
 
-#- task: CopyFilesOverSSH@0
-#  inputs:
-#    sshEndpoint: 'Dyrebar_Deploy'
-#   targetFolder: '/var/www/html'
-#    sourceFolder: '$(Agent.ArtifactStagingDirectory)/s'
-#    contents: '**'
-#   overwrite: true
-#   failOnEmptySource: true
-#  continueOnError: true
+- task: CopyFilesOverSSH@0
+  inputs:
+    sshEndpoint: 'Dyrebar_Deploy'
+    targetFolder: '/var/www/html'
+    sourceFolder: '$(ArtifactsDirectory)'
+    contents: '**'
+    overwrite: true
+    failOnEmptySource: true
+  continueOnError: true
