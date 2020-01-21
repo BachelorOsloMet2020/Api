@@ -56,10 +56,10 @@ steps:
       $ArtifactsDirectory = Join-Path -Path $(Build.SourcesDirectory) -ChildPath "Artifacts"
       $Items | Copy-Item -Destination $ArtifactsDirectory -Recurse -Container -Verbose
 
-      Get-ChildItem -Path $(ArtifactsDirectory) -Recurse
-
       Write-Host $ArtifactsDirectory
       Write-Host "##vso[task.setvariable variable=ArtifactsDirectory;]$ArtifactsDirectory"
+      Write-Host "DevOps Variable $(ArtifactsDirectory) has been created and assigned: " $(ArtifactsDirectory)
+      Get-ChildItem -Path $(ArtifactsDirectory) -Recurse
 
 
 
