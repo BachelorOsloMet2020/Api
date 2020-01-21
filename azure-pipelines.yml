@@ -14,18 +14,19 @@ variables:
 
 steps:
 
-- task: DownloadSecureFile@1
-  name: "azureSSH"
-  displayName: "Aquiering SSH Key"
-  inputs:
-    secureFile: "azureDeploy.pem"
 
-- task: InstallSSHKey@0
-  inputs:
-    knownHostsEntry: "|1|P7bx0b6HyyS3oGplKVNw0RLJxns=|aPk4+4z6irgHuscF/OkRMuE4Hhs= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBHjE08mGkgQNPAO21EvnaiyKCkCBN4dukT6sKJg0vt9FW8HhQiaANflZZwyjtgt9ALyY9pQ6ldMdnmjDz1Gt2nM="
-    sshPublicKey: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCmzl9qbfKTtIPTQd/QGtgreXNliAaxmSh5QQp6jG54DOEiTyuGULmJ5XQN/kndrAHQnqROQ87X1R5OHKaJ6z0A9iJNE0n+sGzILU8xeJ2fKLQfGF8kbSrkBvft8vGTJLXSih2GpDI5gvagBVQUQ/Mb0PSK8KrARnCY20SE2hclG5WM4aMVvl/b2o4sHQouxtjlvToX/Dt2btxg2gGGb4YjNdQhVK2+AjDioejP/YotWpUNxluJTAI/cF85WkFhfydLyZL0j1rI1yrVzzw0eTVghqK+VG3vBWOP4NRo/00mniv9baYx9X/5CfzaYx12yNNt7Cd2dfRcprrdrNG6g9sn azure@webserver"
-    #sshPassphrase: # Optional
-    sshKeySecureFile: '$(azureSSH.secureFilePath)'
+#- task: DownloadSecureFile@1
+#  name: "azureSSH"
+#  displayName: "Aquiering SSH Key"
+#  inputs:
+#    secureFile: "azureDeploy.pem"
+
+#- task: InstallSSHKey@0
+#  inputs:
+#    knownHostsEntry: "|1|P7bx0b6HyyS3oGplKVNw0RLJxns=|aPk4+4z6irgHuscF/OkRMuE4Hhs= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBHjE08mGkgQNPAO21EvnaiyKCkCBN4dukT6sKJg0vt9FW8HhQiaANflZZwyjtgt9ALyY9pQ6ldMdnmjDz1Gt2nM="
+#    sshPublicKey: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCmzl9qbfKTtIPTQd/QGtgreXNliAaxmSh5QQp6jG54DOEiTyuGULmJ5XQN/kndrAHQnqROQ87X1R5OHKaJ6z0A9iJNE0n+sGzILU8xeJ2fKLQfGF8kbSrkBvft8vGTJLXSih2GpDI5gvagBVQUQ/Mb0PSK8KrARnCY20SE2hclG5WM4aMVvl/b2o4sHQouxtjlvToX/Dt2btxg2gGGb4YjNdQhVK2+AjDioejP/YotWpUNxluJTAI/cF85WkFhfydLyZL0j1rI1yrVzzw0eTVghqK+VG3vBWOP4NRo/00mniv9baYx9X/5CfzaYx12yNNt7Cd2dfRcprrdrNG6g9sn azure@webserver"
+#    #sshPassphrase: # Optional
+#   sshKeySecureFile: '$(azureSSH.secureFilePath)'
 
 - script: |
     sudo update-alternatives --set php /usr/bin/php$(phpVersion)
@@ -44,7 +45,7 @@ steps:
 
 - task: CopyFilesOverSSH@0
   inputs:
-    sshEndpoint: 'azure@128.39.121.246'
+    sshEndpoint: 'Dyrebar_Deploy'
     targetFolder: '/var/www/html'
     sourceFolder: '$(Agent.BuildDirectory)'
     contents: '**'
