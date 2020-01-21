@@ -57,8 +57,9 @@ steps:
       $Items | Copy-Item -Destination $ArtifactsDirectory -Recurse -Container -Verbose
 
       Write-Host $ArtifactsDirectory
-      Write-Host "##vso[task.setvariable variable=ArtifactsDirectory;]$ArtifactsDirectory"
-      Get-ChildItem -Path $(env:ArtifactsDirectory) -Recurse
+      Write-Host "##vso[task.setvariable variable=ArtifactsDirectory]$ArtifactsDirectory"
+      Get-ChildItem -Path $ArtifactsDirectory -Recurse
+      Write-Host $(ArtifactsDirectory)
 
 
 
