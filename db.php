@@ -26,12 +26,12 @@
     /**
      * Variable to hold the database connection password
      */
-    $password = "";
+    $password = "dyremeth";
 
     /**
      * Variable to hold the database name
      */
-    $database = "";
+    $database = "dyrebar";
 
     switch($type)
     {
