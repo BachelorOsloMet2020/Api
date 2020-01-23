@@ -1,4 +1,4 @@
-<?php
+    <?php
     require_once "./db.php";
 
 
@@ -6,14 +6,26 @@
 
     if ($_SERVER['REQUEST_METHOD'] === "GET")
     {
-
+        switch ($_GET['request'])
+        {
+            case 'heartbeat':
+            {
+                require './get/heartbeat.php';
+                $o = new heartbeat();
+                echo $o->getJson();
+                break;
+            }
+        }
 
 
 
     }
     else if ($_SERVER['REQUEST_METHOD'] === "POST")
     {
+        switch ($_POST['request'])
+        {
 
+        }
 
 
 
