@@ -16,12 +16,12 @@
      * Hostname or IPv4 address
      * Have not tested for IPv6
      */
-    $address = "";
+    $address = "localhost";
 
     /**
      * Variable to hold the database connection username
      */
-    $username = "";
+    $username = "dyrebar";
 
     /**
      * Variable to hold the database connection password
