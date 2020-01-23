@@ -14,6 +14,14 @@ variables:
 
 steps:
 
+- task: ado-discord-webhook@1
+  displayName: 'Build Starting Notification'
+  inputs:
+    channelId: '669857560421203968'
+    webhookKey: 'CBD4pj1TW5Z9UN5IGSf1rzra5jYt1yCqO6kQDbDVF_PpftUdCFo7Z3-L9baWKqXz3fnS'
+    messageType: 'content'
+    content: 'Starting Api Build'
+  continueOnError: true
 
 - script: |
     sudo update-alternatives --set php /usr/bin/php$(phpVersion)
@@ -56,6 +64,16 @@ steps:
 #  #condition: succeededOrFailed()
 #  continueOnError: true
 
+- task: ado-discord-webhook@1
+  displayName: 'SSH Copy Starting Notification'
+  inputs:
+    channelId: '669857560421203968'
+    webhookKey: 'CBD4pj1TW5Z9UN5IGSf1rzra5jYt1yCqO6kQDbDVF_PpftUdCFo7Z3-L9baWKqXz3fnS'
+    messageType: 'content'
+    content: 'Beginning to deploy API to server'
+  continueOnError: true
+
+
 - task: CopyFilesOverSSH@0
   inputs:
     sshEndpoint: 'Dyrebar_Deploy'
@@ -64,4 +82,13 @@ steps:
     contents: '**'
     overwrite: true
     failOnEmptySource: true
+  continueOnError: true
+
+- task: ado-discord-webhook@1
+  displayName: 'SSH Copy ended Notification'
+  inputs:
+    channelId: '669857560421203968'
+    webhookKey: 'CBD4pj1TW5Z9UN5IGSf1rzra5jYt1yCqO6kQDbDVF_PpftUdCFo7Z3-L9baWKqXz3fnS'
+    messageType: 'content'
+    content: 'API has been deployed'
   continueOnError: true
