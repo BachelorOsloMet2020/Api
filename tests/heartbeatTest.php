@@ -1,5 +1,5 @@
 <?php
-require_once '../get/heartbeat.php';
+require_once './get/heartbeat.php';
 
     class heartbeatTest extends PHPUnit\Framework\TestCase
     {
