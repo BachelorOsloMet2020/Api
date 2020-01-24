@@ -37,7 +37,7 @@ steps:
 
 - script: |
     phpunit --version
-    phpunit tests/. --no-configuration --coverage-clover result.xml --log-junit test-result.xml
+    phpunit tests/.  --coverage-clover result.xml --log-junit test-result.xml
   displayName: 'Run tests with phpunit'
   continueOnError: true
 
