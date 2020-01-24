@@ -4,7 +4,7 @@
     {
         private $status;
         private $out;
-        private $time;
+        public $time;
         function __construct()
         {
             $this->status = true;
