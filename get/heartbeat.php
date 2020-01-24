@@ -8,7 +8,7 @@
         function __construct()
         {
             $this->status = true;
-            $this->time = new DateTime().getTimestamp();
+            $this->time = (new DateTime())->getTimestamp();
         }
 
         public function getJson()
