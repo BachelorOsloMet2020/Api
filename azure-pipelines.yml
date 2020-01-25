@@ -47,7 +47,7 @@ steps:
     targetType: inline
     #workingDirectory: ''
     script: |
-      [string[]]$excludes = @("*.md", "*.yml", "composer.json", ".git", "azure-pipelines.yml", "vendor")
+      [string[]]$excludes = @("*.md", "*.yml", "composer.json", "composer.lock", ".git", "azure-pipelines.yml", "vendor")
       $Items = Get-ChildItem -Path $(Build.SourcesDirectory) -Exclude $excludes
       New-Item -Path $(Build.SourcesDirectory) -Name "Artifacts" -ItemType "directory"
       $ArtifactsDirectory = Join-Path -Path $(Build.SourcesDirectory) -ChildPath "Artifacts"
