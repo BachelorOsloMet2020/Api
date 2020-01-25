@@ -1,9 +1,6 @@
     <?php
     require_once "./db.php";
 
-
-
-
     if ($_SERVER['REQUEST_METHOD'] === "GET")
     {
         switch ($_GET['request'])
@@ -24,7 +21,14 @@
     {
         switch ($_POST['request'])
         {
-
+            case 'oAuth':
+                {
+                    require './post/oAuth.php';
+                    $data = isset($_POST['challenge']) ? $_POST['challenge'] : null;
+                    $o = new oAuth($data);
+                    echo $o->getJson();
+                    break;
+                }
         }
 
 
