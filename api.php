@@ -22,13 +22,13 @@
         switch ($_POST['request'])
         {
             case 'oAuth':
-                {
-                    require './post/oAuth.php';
-                    $data = isset($_POST['challenge']) ? $_POST['challenge'] : null;
-                    $o = new oAuth($data);
-                    echo $o->getJson();
-                    break;
-                }
+            {
+                require './post/oAuth.php';
+                $data = isset($_POST['challenge']) ? $_POST['challenge'] : null;
+                $o = new oAuth($db, $data);
+                echo $o->getJson();
+                break;
+            }
         }
 
 
@@ -58,5 +58,10 @@
             return true;
         }
     }
+
+    /**
+     * Closes the exsisting database connection
+     */
+    (__close)($db);
 
 ?>

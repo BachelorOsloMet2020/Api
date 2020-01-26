@@ -8,8 +8,10 @@
     class oAuth
     {
         private $out;
-        function __construct($data)
+        private $db;
+        function __construct($db, $data)
         {
+            $this->db = $db;
             $challenge = json_decode($data);
             $this->out = new stdClass();
             $this->out->status = false;
@@ -45,7 +47,7 @@
                 $userId = $payload['sub'];
                 if ($o->{'id'} == $userId)
                 {
-                    $this->generateSession($o);
+                    $this->handleoAuthSession($o);
                 }
                 else
                 {
@@ -99,7 +101,7 @@
             {
                 if ($chr_user_id == $o->{'id'} && $chr_app_id == __facebook_id)
                 {
-                    $this->generateSession($o);
+                    $this->handleoAuthSession($o);
                 }
                 else
                 {
@@ -113,22 +115,44 @@
                 $this->out->provider = $o->{'provider'};
             }
 
-            /*$this->out->isValid = $chr_is_valid;
-            $this->out->app_id = $chr_app_id;
-            $this->out->user_id = $chr_user_id;
-            $this->out->out->node = $response->getGraphObject();*/
-            //$this->out->t1 = $chr->getProperty('application');
-
-            //$this->generateSession();
-
         }
 
-        private function generateSession($o)
+        private function handleoAuthSession($o)
         {
             $this->out->status = true;
             $this->out->message = "Generating session";
             $this->out->provider = $o->{'provider'};
+
+            require_once __DIR__.'/session.php';
+            //$result = (__query)($this->db, "INSERT INTO auth ('oAuthId')")
+            $session = new session($this->db, null);
+            $rse = $session->hasProviderSession($o->{'id'}, $o->{'token'}, $o->{'clientType'}, $o->{'deviceId'});
+            if ($rse->status == false)
+            {
+                $this->out->debug_session = "Does not have session";
+                $sic = new stdClass();
+                $sic->token = $o->{'token'};
+                $sic->clientType = $o->{'clientType'};
+                $sic->provider = $o->{'provider'};
+                $sic->deviceId = $o->{'deviceId'};
+                $rse = $session->createProviderSession($o->{'id'}, $sic);
+                $this->out->status = $rse->status;
+                $this->out->session = $rse;
+                if ($rse->status == true)
+                {
+                    $this->out->session_token = $rse->session_token;
+                }
+                // Create new session
+            }
+            else
+            {
+                $this->out->status = $rse->status;
+                $this->out->session_token = $rse->session_token;
+            }
+
+
         }
+
 
 
         public function getJson()

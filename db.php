@@ -78,6 +78,14 @@
      */
     $fetch_assoc;
 
+
+    $num_rows;
+
+    /**
+     * Variable to hold close
+     */
+    $close;
+
     switch($type)
     {
         /**
@@ -89,6 +97,8 @@
             $fetch_array      = 'mysqli_fetch_array';
             $fetch_object     = 'mysqli_fetch_object';
             $fetch_assoc      = 'mysqli_fetch_assoc';
+            $close            = 'mysqli_close';
+            $num_rows         = 'mysqli_num_rows';
             break;
         }
 
@@ -103,6 +113,8 @@ define('__query',           $query);
 define('__fetch_array',     $fetch_array);
 define('__fetch_object',    $fetch_object);
 define('__fetch_assoc',     $fetch_assoc);
+define('__num_rows',        $num_rows);
+define('__close',           $close);
 
 
 ?>
