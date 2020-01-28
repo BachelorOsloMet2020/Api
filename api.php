@@ -37,6 +37,23 @@
                 echo json_encode($o->is_session_valid());
                 break;
             }
+
+            case 'myProfile':
+            {
+                if (isTokenValid())
+                {
+
+                }
+                else
+                {
+                    echo json_encode(array(
+                        "status" => false,
+                        "message" => "Request for myProfile was attempted with invalid or missing token"
+                    ));
+                }
+                break;
+            }
+
         }
 
 

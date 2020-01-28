@@ -170,7 +170,7 @@
             print_r(mysqli_error($this->db));
             if ((__num_rows)($q_id) != 1)
             {
-                $in_id = (__query)($this->db, "INSERT INTO auth (oAuthId, email, provider) VALUES ('".$this->auth->id."', '".$this->auth->email."', '".$this->auth->provider."');");
+                $in_id = (__query)($this->db, "INSERT INTO auth (oAuthId, email, provider) VALUES ('".$this->auth->id."', '".$this->auth->email."', '".$this->auth->provider."') ON DUPLICATE KEY UPDATE oAuthId = '".$this->auth->id."', provider =  '".$this->auth->provider."';");
                 print_r(mysqli_error($this->db));
                 return ($in_id == true) ? true:false;
             }
@@ -272,7 +272,7 @@
                     $rec->provider = $r['provider'];
 
                     //print_r($rec);
-                    if ($this->auth->getId() == $rec->oAuthId && $this->auth->getToken() == $rec->token && $this->auth->getProvider() == $rec->provider)
+                    if ($rec->token != null && $this->auth->getId() == $rec->oAuthId && $this->auth->getToken() == $rec->token && $this->auth->getProvider() == $rec->provider)
                     {
                         
                         $result->isValid = true;

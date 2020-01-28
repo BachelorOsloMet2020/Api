@@ -26,7 +26,7 @@
     /**
      * Variable to hold the database connection password
      */
-    $password = "dyremeth";
+    $password = "b@&qJ9d!PavHHPpF&otw1cd%I^Mwe1aWR";
 
     /**
      * Variable to hold the database name
