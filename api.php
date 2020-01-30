@@ -5,13 +5,15 @@
      * isTokenValid
      * If it is needed to check that the user i authenticated before making request(s)
      */
-    function isTokenValid()
+    function isTokenValid($db)
     {
-        $token = isset($_REQUEST['token']) ? $_POST['token'] : null;
+        
+        $token = isset($_REQUEST['token']) ? $_REQUEST['token'] : null;
+        //print_r($token);
         if ($token == null)
             return false;
-        $res = (__query)($this->db, "SELECT * FROM session WHERE sessionToken = '$token';");
-        if ((__num_rows)($q_id) == 1 && (__fetch_assoc)($q_id)['sessionToken'] == $token)
+        $res = (__query)($db, "SELECT * FROM session WHERE sessionToken = '$token';");
+        if ((__num_rows)($res) == 1 && (__fetch_assoc)($res)['sessionToken'] == $token)
             return true;
         else
             return false;
@@ -40,10 +42,13 @@
 
             case 'myProfile':
             {
-                if (isTokenValid())
-                {
-
-                }
+                if (isTokenValid($db))
+                {   
+                    require './get/profile.php';
+                    $data = isset($_GET['data']) ? $_GET['data'] : null;
+                    $p = new Profile($db, $data, strtolower($_GET['request']));
+                    echo $p->getJson();
+                }   
                 else
                 {
                     echo json_encode(array(
