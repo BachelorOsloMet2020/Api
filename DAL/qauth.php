@@ -18,7 +18,7 @@
             $out = new stdClass();
             $out->status = true;
 
-            $queryText = "SELECT authId FROM auth WHERE oAuthId = ?";
+            $queryText = "SELECT id FROM auth WHERE oAuthId = ?";
             $stmt = $this->db->prepare($queryText);
             $stmt->bind_param("i", $oAuthId);
             $stmt->execute();
@@ -34,6 +34,7 @@
                 $out->error_message = (($result->num_rows > 1) ? "oAuthId matches more than one row! Something is wrong in the database" : 
                                                                  "Could not find an entry with the provided oAuthId");
             }
+            return $out;
         }
 
         /**
@@ -46,20 +47,23 @@
             $out = new stdClass();
             $out->status = true;
 
-            $queryText = "INSERT INT auth (oAuthId, email, provider) VALUES (?, ? ,?)";
+            $queryText = "INSERT INTO auth (oAuthId, email, provider) VALUES (?, ? ,?)
+            ON DUPLICATE KEY UPDATE
+            oAuthId = VALUES(oAuthId),
+            email = VALUES(email),
+            provider = VALUES(provider)";
             $stmt = $this->db->prepare($queryText);
             $stmt->bind_param("iss", $oAuthId, $email, $provider);
             $stmt->execute();
 
-            $result = $stmt->get_result();
-            if ($result->num_rows == 1)
+            if ($stmt->affected_rows >= 1)
             {
                 $out->data = true;
             }
             else
             {
                 $out->status = false;
-                $out->error_message = $stmt->error();
+                $out->error_message = $stmt->error;
             }
             return $out;
         }
@@ -86,7 +90,7 @@
             else
             {
                 $out->status = false;
-                $out->error_message = $stmt->error();
+                $out->error_message = $stmt->error;
             }
             return $out;
         }
@@ -112,11 +116,13 @@
             if ($result->num_rows == 1)
             {
                 $out->data = $result->fetch_assoc();
+                $out->isValid = true;
             }
             else
             {
                 $out->status = false;
-                $out->error_message = $stmt->error();
+                $out->isValid = false;
+                $out->error_message = $stmt->error;
             }
             return $out;
 
@@ -146,11 +152,28 @@
                 clientType = VALUES(clientType),
                 provider = VALUES(provider)
                 ";
+                /*print_r($authId);
+                print_r($o);*/
                 $stmt = $this->db->prepare($queryText);
-                $stmt->bind_param("ississs", $authId, $o->getToken(), $session_token, $time, $o->getClientType(), $o->getProvider(), $o->getDeviceId());
+                $stmt->bind_param("ississs", $authId, $o->token, $session_token, $time, $o->client_type, $o->provider, $o->device_id);
                 $stmt->execute();
 
-                $result = $stmt->get_result();
+                // $out->tmpAffectred = $stmt->affected_rows;
+                // $out->tmpToken = $session_token;
+                if ($stmt->affected_rows >= 1)
+                {
+                    $sessionData = new stdClass();
+                    $sessionData->id = $o->getId();
+                    $sessionData->session_token = $session_token;
+                    $sessionData->time = $time;
+                    $sessionData->provider = $o->getProvider();
+                    $out->data = $sessionData;
+                }
+                else
+                {
+                    $out->status = false;
+                    $out->error_message = $stmt->error;
+                }
 
                 $stmt->free_result();
                 $stmt->close();
@@ -169,29 +192,29 @@
                 provider = VALUES(provider)
                 ";
                 $stmt = $this->db->prepare($queryText);
-                $stmt->bind_param("ississ", $authId, $o->getToken(), $session_token, $time, $o->getClientType(), $o->getProvider());
+                $stmt->bind_param("ississ", $authId, $o->token, $session_token, $time, $o->client_type, $o->provider);
                 $stmt->execute();
 
-                $result = $stmt->get_result();
+
+                if ($stmt->affected_rows >= 1)
+                {
+                    $sessionData = new stdClass();
+                    $sessionData->id = $o->getId();
+                    $sessionData->session_token = $session_token;
+                    $sessionData->time = $time;
+                    $sessionData->provider = $o->getProvider();
+                    $out->data = $sessionData;
+                }
+                else
+                {
+                    $out->status = false;
+                    $out->error_message = $stmt->error;
+                }
 
                 $stmt->free_result();
                 $stmt->close();
             }
 
-            if ($result->num_rows == 1)
-            {
-                $sessionData = new stdClass();
-                $sessionData->id = $o->getId();
-                $sessionData->session_token = $session_token;
-                $sessionData->time = $time;
-                $sessionData->provider = $o->getProvider();
-                $out->data = $sessionData;
-            }
-            else
-            {
-                $out->status = false;
-                $out->error_message = $stmt->error();
-            }
             return $out;
         }
 
@@ -204,7 +227,7 @@
             $out = new stdClass();
             $out->status = true;
 
-            $result = null;
+            $affected_rows = 0;
 
             $time = (new DateTime())->getTimestamp();
             $session_token = md5(uniqid($o->getId()));
@@ -223,7 +246,7 @@
                 $stmt->bind_param("isisss", $authId, $session_token, $time, $p->getClientType(), $p->getProvider(), $p->getDeviceId());
                 $stmt->execute();
 
-                $result = $stmt->get_result();
+                $affected_rows = $stmt->affected_rows;
 
                 $stmt->free_result();
                 $stmt->close();
@@ -244,13 +267,13 @@
                 $stmt->bind_param("isiss", $authId, $session_token, $time, $p->getClientType(), $p->getProvider());
                 $stmt->execute();
 
-                $result = $stmt->get_result();
+                $affected_rows = $stmt->affected_rows;
 
                 $stmt->free_result();
                 $stmt->close();
             }
 
-            if ($result->num_rows == 1)
+            if ($affected_rows >= 1)
             {
                 $sessionData = new stdClass();
                 $sessionData->id = $p->getId();
@@ -262,7 +285,7 @@
             else
             {
                 $out->status = false;
-                $out->error_message = $stmt->error();
+                $out->error_message = $stmt->error;
             }
             return $out;
         }

@@ -8,7 +8,37 @@
 
     class auth
     {
+        public function to_oAuthObject($json)
+        {
+            $j = json_decode($json);
+            $auth = new oAuth(
+                $j->{'id'}, 
+                $j->{'email'},
+                $j->{'token'}, 
+                $j->{'provider'}, 
+                $j->{'client_type'},
+                (isset($j->{'app_id'}) ? $j-> {'app_id'} : null), 
+                (isset($j->{'duid'}) ? $j->{'duid'} : null)
+            );
+            return $auth;
+        }
 
+        public function to_pAuthObject($json)
+        {
+            $j = json_decode($json);
+            $auth = new pAuth($j->{'id'}, $j->{'email'}, $j->{'password'}, $j->{'provider'}, (isset($j->{'duid'}) ? $j->{'duid'} : null));
+            return $auth;
+        }
+
+        public function to_sessionObject($json)
+        {
+            $j = json_decode($json);
+            $session = new session(
+                $j->{'id'}, $j->{'session_token'}, $j->{'provider'}
+            );
+            return $session;
+        }
+        
 
         public function challengeFacebook($auth)
         {
@@ -57,6 +87,35 @@
             return $out;
         }
 
+        public function challengePassword($auth, $qa)
+        {
+            $out = new stdClass();
+            if (!isset($auth) || $qa->status == false)
+            {
+                $out->status = false;  $out->message = "Values are not present";
+                $out->error_message = ((!isset($auth)) ? "Password Authentication object is not defined or empty" : "Query is not completed or faulty");  return $out;
+            }
+            else
+            {
+                if ($auth->getPassword() == $qa->data['password'] && $auth->getEmail() == $qa->data['email'])
+                {
+                    $out->status = true;
+                    $out->message = "Credentials is valid";
+                }
+                else
+                {
+                    $out->status = false;
+                    $out->message = "Email or password mismatch";
+                }
+            }
+            return $out;
+        }
+
+
+        public function validateToken()
+        {
+            
+        }
         
 
 

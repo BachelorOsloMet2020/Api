@@ -41,7 +41,7 @@
                 echo $o->getJson();
                 break;
             }
-            case 'isSessionValid':
+            /*case 'isSessionValid':
             case 'validateSessionToken':
             {
                 require './Auth.php';
@@ -49,7 +49,7 @@
                 $o = new Auth($db, $data);
                 echo json_encode($o->is_session_valid());
                 break;
-            }
+            }*/
 
             case 'myProfile':
             {
@@ -94,29 +94,118 @@
     }
     else if ($_SERVER['REQUEST_METHOD'] === "POST")
     {
-        switch ($_POST['request'])
+        if (isset($_POST['auth']))
         {
-            case 'oAuth':
+            require './DAL/qauth.php';
+            require './DHL/auth.php';
+
+            $data = isset($_REQUEST['data']) ? $_REQUEST['data'] : null;
+            //echo "Handling auth";
+            switch ($_POST['auth'])
             {
-                require './Auth.php';
-                $data = isset($_POST['data']) ? $_POST['data'] : null;
-                $o = new Auth($db, $data);
-                $result = $o->challenge();
-                echo json_encode($result);
-                break;
-            }
-            case 'pAuth':
-            {
-                require './Auth.php';
-                $data = isset($_POST['data']) ? $_POST['data'] : null;
-                $o = new Auth($db, $data);
-                $result = $o->dyrebar_sign_in();
-                echo json_encode($result);
-                break;
+                case 'GOOGLE':
+                {
+                    $auth = new auth();
+                    $qa = new qauth($db);
+                    $oAuth = $auth->to_oAuthObject($data);
+                    $resp = $auth->challengeGoogle($oAuth);
+                    if ($resp->status != true) { echo json_encode($resp); exit; }
+                    $R_authId = $qa->getAuthId($oAuth->getId());
+                    if ($R_authId->status == false)
+                    {
+                        $cr_auhtId = $qa->newAuthId($oAuth->getId(), $oAuth->getEmail(), $oAuth->getProvider());
+                        if ($cr_auhtId->status == true && $cr_auhtId->data == true)
+                            $R_authId = $qa->getAuthId($oAuth->getId());
+                        else
+                            { echo json_encode(array("status" => false, "getAuth" => $R_authId, "newAuth" => $cr_auhtId)); exit; }
+                    }
+                    $session = $qa->newSessionOAuth($R_authId->data['id'], $oAuth);
+                    echo json_encode($session);
+                    break;
+                }
+
+                case 'FACEBOOK':
+                {
+                    $auth = new auth();
+                    $qa = new qauth($db);
+                    $oAuth = $auth->to_oAuthObject($data);
+                    $resp = $auth->challengeFacebook($oAuth);
+                    if ($resp->status != true) { echo json_encode($resp); exit; }
+                    $R_authId = $qa->getAuthId($oAuth->getId());
+                    if ($R_authId->status == false)
+                    {
+                        $cr_auhtId = $qa->newAuthId($oAuth->getId(), $oAuth->getEmail(), $oAuth->getProvider());
+                        if ($cr_auhtId->status == true && $cr_auhtId->data == true)
+                            $R_authId = $qa->getAuthId($oAuth->getId());
+                        else
+                            { echo json_encode(array("status" => false, "getAuth" => $R_authId, "newAuth" => $cr_auhtId)); exit; }
+                    }
+                    $session = $qa->newSessionOAuth($R_authId->data['id'], $oAuth);
+                    echo json_encode($session);
+                    break;        
+                }
+
+                case 'DYREBAR':
+                {
+                    $auth = new auth();
+                    $qa = new qauth($db);
+                    $pAuth = $auth->to_pAuthObject($data);
+                    $qAuth = $qa->getPassword($pAuth->getEmail());
+                    $resp = $auth->challengePassword($pAuth, $qAuth);
+                    if ($resp->status != true) { echo json_encode($resp); exit; }
+                    
+                    $R_authId = $qa->getAuthId($pAuth->getId());
+                    if ($R_authId->status == false)
+                    {
+                        $cr_auhtId = $qa->newAuthId($pAuth->getId(), $pAuth->getEmail(), $pAuth->getProvider());
+                        if ($cr_auhtId->status == true && $cr_auhtId->data == true)
+                            $R_authId = $qa->getAuthId($pAuth->getId());
+                        else
+                            { echo json_encode(array("status" => false, "getAuth" => $R_authId, "newAuth" => $cr_auhtId)); exit; }
+                    }
+                    $session = $qa->newSessionPAuth($R_authId->data['id'], $oAuth);
+                    echo json_encode($session);
+
+                    break;
+                }
+                case 'validate':
+                {
+                    $auth = new auth();
+                    $qa = new qauth($db);
+                    $sessionObject = $auth->to_sessionObject($data);
+                    $R_authId = $qa->getAuthId($sessionObject->getId());
+                    if ($R_authId->status == false) { echo json_encode($R_authId); exit; }
+                    $R_session = $qa->getSession($R_authId->data['id'], $sessionObject->getToken());
+                    echo json_encode($R_session);
+                    break;
+                }
+
             }
         }
-
-
+        else
+        {
+            switch ($_POST['request'])
+            {
+                case 'dep_oAuth':
+                {
+                    require './Auth.php';
+                    $data = isset($_POST['data']) ? $_POST['data'] : null;
+                    $o = new Auth($db, $data);
+                    $result = $o->challenge();
+                    echo json_encode($result);
+                    break;
+                }
+                case 'dep_pAuth':
+                {
+                    require './Auth.php';
+                    $data = isset($_POST['data']) ? $_POST['data'] : null;
+                    $o = new Auth($db, $data);
+                    $result = $o->dyrebar_sign_in();
+                    echo json_encode($result);
+                    break;
+                }
+            }
+        }
 
         
     }
