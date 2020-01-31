@@ -9,14 +9,25 @@
     {
         
         $token = isset($_REQUEST['token']) ? $_REQUEST['token'] : null;
-        //print_r($token);
-        if ($token == null)
-            return false;
-        $res = (__query)($db, "SELECT * FROM session WHERE sessionToken = '$token';");
-        if ((__num_rows)($res) == 1 && (__fetch_assoc)($res)['sessionToken'] == $token)
-            return true;
+        $queryText = "SELECT * FROM session WHERE sessionToken = ?";
+        $stmt = $db->prepare($queryText);
+        $stmt->bind_param("s", $token);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $r = $result->fetch_assoc();
+
+        if ($result->num_rows == 1)
+        {
+            if ($r['sessionToken'] == $token)
+                return true;
+            else
+                return false;
+        }
         else
+        {
             return false;
+        }
+        $stmt->free_result(); $stmt->close();
     }
 
     if ($_SERVER['REQUEST_METHOD'] === "GET")
@@ -44,10 +55,15 @@
             {
                 if (isTokenValid($db))
                 {   
-                    require './get/profile.php';
-                    $data = isset($_GET['data']) ? $_GET['data'] : null;
-                    $p = new Profile($db, $data, strtolower($_GET['request']));
-                    echo $p->getJson();
+                    require './DAL/qprofile.php';
+                    require './DHL/profile.php';
+                    $token = isset($_GET['token']) ? $_GET['token'] : null;
+                    $uid = isset($_GET['uid']) ? $_GET['uid'] : null;
+                    $QP = new qprofile($db);
+                    $QP_R = $QP->getPrivateProfile($uid, $token);
+                    $PP = new profile();
+                    $profile = $PP->getPrivateProfile($QP_R);
+                    echo json_encode($profile);
                 }   
                 else
                 {
@@ -56,6 +72,18 @@
                         "message" => "Request for myProfile was attempted with invalid or missing token"
                     ));
                 }
+                break;
+            }
+            case 'profile':
+            {
+                require './DAL/qprofile.php';
+                require './DHL/profile.php';
+                $uid = isset($_GET['uid']) ? $_GET['uid'] : null;
+                $QP = new qprofile($db);
+                $QP_R = $QP->getSinglePublicProfile($uid);
+                $PP = new profile();
+                $profile = $PP->getSinglePublicProfile($QP_R);
+                echo json_encode($profile);
                 break;
             }
 
@@ -119,6 +147,6 @@
     /**
      * Closes the exsisting database connection
      */
-    (__close)($db);
-
+    $db->close();
+    $db = null;
 ?>
