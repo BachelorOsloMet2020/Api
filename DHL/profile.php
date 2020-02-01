@@ -118,7 +118,7 @@
                 (isset($j->{'id'}) ? $j->{'id'} : null),
                 $j->{'authId'},
                 $j->{'email'},
-                (($j->{'imageType'} == "url") ? $j->{'image'} : null),
+                (!isset($j->{'imageType'}) || ($j->{'imageType'} == "url") ? $j->{'image'} : null),
                 $j->{'firstName'},
                 $j->{'lastName'},
                 $j->{'address'},
