@@ -136,7 +136,7 @@
                 {
                     $out->error_message = $Up->message;
                 }
-                print_r("image is null and file");
+                //print_r("image is null and file");
             }
             else if ($profile->image == null && $j->{'imageType'} == "base64")
             {
@@ -147,7 +147,7 @@
                 file_put_contents($fullPath, base64_decode($j->{'image'}));
                 $webPath = __host.__images_dir.$imgPath;
                 $profile->image = $webPath;
-                print_r($webPath);
+                //print_r($webPath);
             }
             $out->profile = $profile;
             return $out;
