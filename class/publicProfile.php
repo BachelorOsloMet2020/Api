@@ -12,10 +12,9 @@
         /**
          * 
          */
-        function __construct($id, $authId, $email, $image, $firstName, $lastName, $phoneNumber)
+        function __construct($id, $email, $image, $firstName, $lastName, $phoneNumber)
         {
             $this->id = $id;
-            $this->authId = $authId;
             $this->email = $email;
             $this->image = $image;
             $this->firstName = $firstName;

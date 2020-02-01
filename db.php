@@ -37,7 +37,7 @@
     {
         case "mysql":
         {
-            $db = mysqli_connect($address, $username, $password, $database);
+            $db = new mysqli($address, $username, $password, $database); //mysqli_connect($address, $username, $password, $database);
             break;
         }
 
