@@ -50,8 +50,13 @@
                     require './DHL/profile.php';
                     $token = isset($_GET['token']) ? $_GET['token'] : null;
                     $uid = isset($_GET['uid']) ? $_GET['uid'] : null;
+                    $authId = isset($_GET['authId']) ? $_GET['authId'] : null;
                     $QP = new qprofile($db);
-                    $QP_R = $QP->getPrivateProfile($uid, $token);
+                    $QP_R = null;
+                    if (isset($uid) && $uid != null)
+                        $QP_R = $QP->getPrivateProfileByUid($uid, $token);
+                    else
+                        $QP_R = $QP->getPrivateProfileByAuthId($authId, $token);
                     $PP = new profile();
                     $profile = $PP->getPrivateProfile($QP_R);
                     echo json_encode($profile);
@@ -195,15 +200,20 @@
                     {   
                         require './DAL/qprofile.php';
                         require './DHL/profile.php';
+                        $QP = new qprofile($db);
                         $PP = new profile();
                         $data = isset($_REQUEST['data']) ? $_REQUEST['data'] : null;
                         $profile = $PP->getPrivateProfile_FromJson($data);
+                        if (!isset($profile) || !isset($profile->profile))
+                        {
+                            // error message
 
-                        /*$QP = new qprofile($db);
-                        $QP_R = $QP->getPrivateProfile($uid, $token);
-                        ;*/
+
+                        }
+                        $token = isset($_REQUEST['token']) ? $_REQUEST['token'] : null;
+                        $result = $QP->postPrivateProfile($token, $profile->profile);
                         
-                        echo json_encode($profile);
+                        echo json_encode($result);
                     }   
                     else
                     {

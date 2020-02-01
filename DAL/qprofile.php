@@ -54,7 +54,7 @@
          * getPrivateProfile, returns a record of one private profile
          * request is rejected if 
          */
-        public function getPrivateProfile($userId, $token)
+        public function getPrivateProfileByUid($userId, $token)
         {
             $out = new stdClass();
             $out->status = true;
@@ -79,6 +79,50 @@
                 {
                     $out->message = "Token not valid to retrieve data for user with id:".$userId;
                     $out->error_message = "Token:".$token." is not valid with the user with user_id:".$userId;
+                }
+            }
+            else
+            {
+                $out->status = false;
+                $out->message = "No record found";
+            }
+
+            /** Cleaning up */
+            $stmt->free_result();
+            $stmt->close();
+            
+            return $out;
+        }
+
+                /**
+         * getPrivateProfile, returns a record of one private profile
+         * request is rejected if 
+         */
+        public function getPrivateProfileByAuthId($authId, $token)
+        {
+            $out = new stdClass();
+            $out->status = true;
+
+            $queryText = "SELECT auth.email, profile.*, session.sessionToken FROM userprofile AS profile 
+            INNER JOIN session ON profile.authId = session.authId
+            INNER JOIN auth ON auth.id = profile.authId
+            WHERE profile.authId = ?;";
+
+            $stmt =  $this->db->prepare($queryText);
+            $stmt->bind_param("i", $authId);
+            $stmt->execute();
+
+            $result = $stmt->get_result();
+
+            if ($result->num_rows == 1)
+            {
+                $res = $result->fetch_assoc();
+                if ($res['sessionToken'] == $token)
+                    $out->data = $res;
+                else
+                {
+                    $out->message = "Token not valid to retrieve data for user with id:".$authId;
+                    $out->error_message = "Token:".$token." is not valid with the user with user_id:".$authId;
                 }
             }
             else
@@ -159,24 +203,34 @@
             return $out;
         }*/
 
-        public function postPublicProfile($token, $profile)
+        public function postPrivateProfile($token, $profile)
         {
             $out = new stdClass();
             $out->status = true;
+            $out->message = "";
+            $out->error_message = "";
+            //print_r($profile);
             if ($profile->id == null)
             {
                 /** User does not exists */
-                $queryText = "INSERT INTO userprofile (authId, firstName, lastName, email, image, address, postnumber, phone) VALUES
-                                                      ( ?,     ?,         ?,        ?,     ?,     ?,       ?,          ?)";
+                $queryText = "INSERT INTO userprofile (authId, firstName, lastName, image, address, postnumber, phone) 
+                                            VALUES    (     ?,         ?,        ?,     ?,       ?,          ?,     ?)";
                 $stmt = $this->db->prepare($queryText);
-                $stmt->bind_param("isssssis", $profile->authId, $profile->firstName, $profile->lastName, $profile->email, $profile->image, $profile->address, $profile->postnumber, $profile->phoneNumber);
-                $stmt->execute();
-                $result = $stmt->get_result();
-                if ($result->num_rows == 0)
+                $stmt->bind_param("issssis", 
+                    $profile->authId, 
+                    $profile->firstName, 
+                    $profile->lastName, 
+                    $profile->image,
+                    $profile->address,
+                    $profile->postnumber, 
+                    $profile->phoneNumber
+                );
+                $success = $stmt->execute();
+                if (!$success || $stmt->affected_rows == 0)
                 {
                     $out->status = false;
                     $out->message = "Failed to create profile";
-                    $out->error_message = $stmt->error();
+                    $out->error_message = $stmt->error;
                 }
 
                 $stmt->free_result();
@@ -188,33 +242,52 @@
                 $queryText = "UPDATE userprofile
                 SET firstName = ?,
                 SET lastName = ?,
-                SET email = ?,
                 SET image = ?,
                 SET address = ?,
                 SET postnumber = ?,
                 SET phone = ?
                 WHERE id = ?";
                 $stmt = $this->db->prepare($queryText);
-                $stmt->bind_param("sssssisi", 
+                $stmt->bind_param("ssssisi", 
                     $profile->firstName, 
                     $profile->lastName,
-                    $profile->email,
                     $profile->image,
                     $profile->address,
                     $profile->postnumber,
                     $profile->phone,
                     $profile->id);
-                $stmt->execute();
-                if ($stmt->rowCount() == 0)
+                $status = $stmt->execute();
+                if ($stauts == false || $stmt->affected_rows == 0)
                 {
                     $out->status = false;
-                    $out->message = "Failed to create profile";
-                    $out->error_message = $stmt->errorInfo();
+                    $out->message = "Failed to update profile";
+                    $out->error_message = $stmt->error;
                 }
 
                 $stmt->free_result();
                 $stmt->close();
             }
+
+            /** Update email */
+            $queryText = "UPDATE auth SET email = ? WHERE id = ?";
+            $stmt = $this->db->prepare($queryText);
+            $stmt->bind_param("si", $profile->email, $profile->authId);
+            $success = $stmt->execute();
+
+            if ($success && $stmt->affected_rows == 0)
+            {
+                $out->message .= "| Email is not changed";
+            }
+            else if ($stmt->affected_rows >= 1)
+            {
+                $out->message .= "; Email has been updated";
+            }
+            else
+            {
+                $out->message .= "| Email failed to update";
+                $out->error_message .= " | " . $stmt->error;
+            }
+            return $out;
 
         }
 
