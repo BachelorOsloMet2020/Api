@@ -7,6 +7,6 @@
     define('__facebook_access_token', '2183988041905442|a7df978eafc8d9dabbf028f0fccbc6e9');
 
     define('__google_client_id', '310756383639-vvkhg35gajq0gafl04ubs7093b3lgs7i.apps.googleusercontent.com');
-    define('__images_dir', '../images/');
+    define('__images_dir', 'images/');
 
 ?>

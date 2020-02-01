@@ -2,6 +2,8 @@
 
     require_once './class/privateProfile.php';
     require_once './class/publicProfile.php';
+    require_once './secrets.php';
+
 
     require_once './Upload.php';
 
@@ -106,16 +108,17 @@
          */
         public function getPrivateProfile_FromJson($data)
         {
+            //print_r($data);
             $out = new stdClass();
             $out->status = true;
             $j = json_decode($data);
-            $token = $j->{'token'};
+            //$token = $j->{'token'};
 
             $profile = new privateProfile(
                 (isset($j->{'id'}) ? $j->{'id'} : null),
                 $j->{'authId'},
                 $j->{'email'},
-                (($r->{'imageType'} == "url") ? $r->{'image'} : null),
+                (($j->{'imageType'} == "url") ? $j->{'image'} : null),
                 $j->{'firstName'},
                 $j->{'lastName'},
                 $j->{'address'},
@@ -125,7 +128,7 @@
 
             if ($profile->image == null && $j->{'imageType'} == "file")
             {
-                $imageName = md5($profile->id().$token);
+                $imageName = md5($profile->email.$profile->firstName.$profile->lastName);
                 $Up = new Upload($imageName, $this);
                 $profile->image = $Up->image;
                 $out->status = $Up->status;
@@ -133,9 +136,21 @@
                 {
                     $out->error_message = $Up->message;
                 }
+                print_r("image is null and file");
+            }
+            else if ($profile->image == null && $j->{'imageType'} == "base64")
+            {
+                $imageName = md5($profile->email.$profile->firstName.$profile->lastName);
+
+                $imgPath = "profile/" . $imageName . ".png";
+                $fullPath = "../" . __images_dir . $imgPath;
+                file_put_contents($fullPath, base64_decode($j->{'image'}));
+                $webPath = __host.__images_dir.$imgPath;
+                $profile->image = $webPath;
+                print_r($webPath);
             }
             $out->profile = $profile;
-
+            return $out;
         }
 
 

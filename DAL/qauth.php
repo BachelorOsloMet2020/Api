@@ -164,6 +164,7 @@
                 {
                     $sessionData = new stdClass();
                     $sessionData->id = $o->getId();
+                    $sessionData->authId = $authId;
                     $sessionData->session_token = $session_token;
                     $sessionData->time = $time;
                     $sessionData->provider = $o->getProvider();
@@ -200,6 +201,7 @@
                 {
                     $sessionData = new stdClass();
                     $sessionData->id = $o->getId();
+                    $sessionData->authId = $authId;
                     $sessionData->session_token = $session_token;
                     $sessionData->time = $time;
                     $sessionData->provider = $o->getProvider();
@@ -277,6 +279,7 @@
             {
                 $sessionData = new stdClass();
                 $sessionData->id = $p->getId();
+                $sessionData->authId = $authId;
                 $sessionData->session_token = $session_token;
                 $sessionData->time = $time;
                 $sessionData->provider = $p->getProvider();

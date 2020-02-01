@@ -10,6 +10,46 @@
             $this->db = $db;
         }
 
+
+        public function getPrivateProfileId($authId)
+        {
+            $out = new stdClass();
+            $out->status = true;
+
+            $queryText = "SELECT profile.id FROM userprofile AS profile
+            WHERE profile.authId = ?;";
+
+            $stmt =  $this->db->prepare($queryText);
+            $stmt->bind_param("i", $authId);
+            $stmt->execute();
+
+            $result = $stmt->get_result();
+
+            if ($result->num_rows == 1)
+            {
+                $res = $result->fetch_assoc();
+                if (isset($res['id']))
+                    $out->data = $res['id'];
+                else
+                {
+                    $out->message = "Token not valid to retrieve data for user with id:".$userId;
+                    $out->error_message = "Token:".$token." is not valid with the user with user_id:".$userId;
+                }
+            }
+            else
+            {
+                $out->status = false;
+                $out->message = "No record found";
+            }
+
+            /** Cleaning up */
+            $stmt->free_result();
+            $stmt->close();
+            
+            return $out;
+        }
+
+
         /**
          * getPrivateProfile, returns a record of one private profile
          * request is rejected if 

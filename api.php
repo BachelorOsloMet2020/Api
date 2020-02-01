@@ -41,15 +41,6 @@
                 echo $o->getJson();
                 break;
             }
-            /*case 'isSessionValid':
-            case 'validateSessionToken':
-            {
-                require './Auth.php';
-                $data = isset($_GET['data']) ? $_GET['data'] : null;
-                $o = new Auth($db, $data);
-                echo json_encode($o->is_session_valid());
-                break;
-            }*/
 
             case 'myProfile':
             {
@@ -74,6 +65,18 @@
                 }
                 break;
             }
+
+            case 'myProfileId':
+            {
+                require './DAL/qprofile.php';
+                require './DHL/profile.php';
+                $authId = isset($_GET['authId']) ? $_GET['authId'] : null;
+                $QP = new qprofile($db);
+                $QP_R = $QP->getPrivateProfileId($authId);
+                echo json_encode($QP_R);
+                break;
+            }
+
             case 'profile':
             {
                 require './DAL/qprofile.php';
@@ -186,22 +189,29 @@
         {
             switch ($_POST['request'])
             {
-                case 'dep_oAuth':
+                case 'myProfile':
                 {
-                    require './Auth.php';
-                    $data = isset($_POST['data']) ? $_POST['data'] : null;
-                    $o = new Auth($db, $data);
-                    $result = $o->challenge();
-                    echo json_encode($result);
-                    break;
-                }
-                case 'dep_pAuth':
-                {
-                    require './Auth.php';
-                    $data = isset($_POST['data']) ? $_POST['data'] : null;
-                    $o = new Auth($db, $data);
-                    $result = $o->dyrebar_sign_in();
-                    echo json_encode($result);
+                    if (isTokenValid($db))
+                    {   
+                        require './DAL/qprofile.php';
+                        require './DHL/profile.php';
+                        $PP = new profile();
+                        $data = isset($_REQUEST['data']) ? $_REQUEST['data'] : null;
+                        $profile = $PP->getPrivateProfile_FromJson($data);
+
+                        /*$QP = new qprofile($db);
+                        $QP_R = $QP->getPrivateProfile($uid, $token);
+                        ;*/
+                        
+                        echo json_encode($profile);
+                    }   
+                    else
+                    {
+                        echo json_encode(array(
+                            "status" => false,
+                            "message" => "Request for myProfile was attempted with invalid or missing token"
+                        ));
+                    }
                     break;
                 }
             }
