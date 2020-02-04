@@ -33,7 +33,7 @@
                 isset($_data['firstName']) && 
                 isset($_data['lastName']) &&
                 isset($_data['address']) &&
-                isset($_data['postnumber']) &&
+                isset($_data['postNumber']) &&
                 isset($_data['phone'])
             )
             {
@@ -45,7 +45,7 @@
                     $_data['firstName'],
                     $_data['lastName'],
                     $_data['address'],
-                    $_data['postnumber'],
+                    $_data['postNumber'],
                     $_data['phone']
                 );
                 $out->profile = $profile;
@@ -122,7 +122,7 @@
                 $j->{'firstName'},
                 $j->{'lastName'},
                 $j->{'address'},
-                $j->{'postnumber'},
+                $j->{'postNumber'},
                 $j->{'phone'}
             );
 

@@ -213,7 +213,7 @@
             if ($profile->id == null)
             {
                 /** User does not exists */
-                $queryText = "INSERT INTO userprofile (authId, firstName, lastName, image, address, postnumber, phone) 
+                $queryText = "INSERT INTO userprofile (authId, firstName, lastName, image, address, postNumber, phone) 
                                             VALUES    (     ?,         ?,        ?,     ?,       ?,          ?,     ?)";
                 $stmt = $this->db->prepare($queryText);
                 $stmt->bind_param("issssis", 
@@ -222,7 +222,7 @@
                     $profile->lastName, 
                     $profile->image,
                     $profile->address,
-                    $profile->postnumber, 
+                    $profile->postNumber, 
                     $profile->phoneNumber
                 );
                 $success = $stmt->execute();
@@ -244,7 +244,7 @@
                 SET lastName = ?,
                 SET image = ?,
                 SET address = ?,
-                SET postnumber = ?,
+                SET postNumber = ?,
                 SET phone = ?
                 WHERE id = ?";
                 $stmt = $this->db->prepare($queryText);
@@ -253,7 +253,7 @@
                     $profile->lastName,
                     $profile->image,
                     $profile->address,
-                    $profile->postnumber,
+                    $profile->postNumber,
                     $profile->phone,
                     $profile->id);
                 $status = $stmt->execute();

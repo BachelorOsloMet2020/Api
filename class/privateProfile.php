@@ -9,13 +9,13 @@
         public $firstName;
         public $lastName;
         public $address;
-        public $postnumber;
+        public $postNumber;
         public $phoneNumber;
 
         /**
          * 
          */
-        function __construct($id, $authId, $email, $image, $firstName, $lastName, $address, $postnumber, $phoneNumber)
+        function __construct($id, $authId, $email, $image, $firstName, $lastName, $address, $postNumber, $phoneNumber)
         {
             $this->id = $id;
             $this->authId = $authId;
@@ -24,7 +24,7 @@
             $this->firstName = $firstName;
             $this->lastName = $lastName;
             $this->address = $address;
-            $this->postnumber = $postnumber;
+            $this->postNumber = $postNumber;
             $this->phoneNumber = $phoneNumber;
         }
     }
