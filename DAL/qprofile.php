@@ -103,13 +103,13 @@
             $out = new stdClass();
             $out->status = true;
 
-            $queryText = "SELECT auth.email, profile.*, session.sessionToken FROM userprofile AS profile 
+            $queryText = "SELECT auth.email, profile.* FROM userprofile AS profile 
             INNER JOIN session ON profile.authId = session.authId
             INNER JOIN auth ON auth.id = profile.authId
-            WHERE profile.authId = ?;";
+            WHERE profile.authId = ? AND session.sessionToken = ?;";
 
             $stmt =  $this->db->prepare($queryText);
-            $stmt->bind_param("i", $authId);
+            $stmt->bind_param("is", $authId, $token);
             $stmt->execute();
 
             $result = $stmt->get_result();
