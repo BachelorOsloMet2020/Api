@@ -5,15 +5,59 @@
     {
         
         private $out;
-
+        private $imageName;
+        private $imagePath;
+        private $imageFolder;
         /**
          * Creates Upload object
          * $imageName 
          */
         function __construct($imageName, $type)
         {
-            $this->out = new stdClass();
-            $this->out->status = true;
+            $this->imageName = $imageName;
+            if ($type instanceof profile)
+            {
+                $this->imagePath = "../" . __images_dir . "profile/";
+                $this->imageFolder = "profile/";
+            }
+            else if ($type instanceof animal)
+            {
+                $this->imagePath = "../" . __images_dir . "animal/";
+                $this->imageFolder = "animal/";
+            }
+            else
+            {
+                error_log("Upload.php encounterted an unexpected type, please verify paramter". print_r($type, true));
+            }
+
+        }
+
+        /**
+         * $byteStream Requires Base64 String
+         * @return Returns Object with "status" and "url", "url" is not set if status is false
+         */
+        public function handleByteStream($byteStream)
+        {
+            $out = new stdClass();
+            $fullPath = $this->imagePath . $this->imageName . ".png";
+            $base_decode = base64_decode($byteStream);
+            $saved = file_put_contents($fullPath, $base_decode);
+            if ($saved != false)
+            {
+                $out->status = true;
+                $out->url = __host . __images_dir . $this->imageFolder . $this->imageName . ".png";
+            }
+            else
+                $out->status = false;
+            return $out;
+        }
+
+
+
+        public function handleFileUpload()
+        {
+            $out = new stdClass();
+            $out->status = true;
 
             if (!$this->isFilePresent())
             {
@@ -34,24 +78,39 @@
             }
 
 
-            if ($type instanceof profile)
+            if ($this->type instanceof profile)
             {
-                $imgPath = "profile/" . $imageName . $this->getExtension();
+                $imgPath = "profile/" . $this->imageName . $this->getExtension();
                 $fullPath = __images_dir . $imgPath;
                 $result = $this->moveFile($fullPath);
                 if ($result)
                 {
-                    $this->out->image = __host . $imgPath;
+                    $out->url = __host . $imgPath;
                 }
                 else
                 {
-                    
+                    $out->status = false;
                 }
             }
-    
-    
-    
+            else if ($this->type instanceof animal)
+            {
+                $imgPath = "animal/" . $this->imageName . $this->getExtension();
+                $fullPath = __images_dir . $imgPath;
+                $result = $this->moveFile($fullPath);
+                if ($result)
+                {
+                    $out->url = __host . $imgPath;
+                }
+                else
+                {
+                    $out->status = false;
+                }
+            }
+
+            return $out;
         }
+
+
     
         private function moveFile($fullPath)
         {

@@ -8,6 +8,10 @@
 
     class auth
     {
+        function __construct()
+        {
+        }
+
         public function to_oAuthObject($json)
         {
             $j = json_decode($json);
@@ -26,7 +30,7 @@
         public function to_pAuthObject($json)
         {
             $j = json_decode($json);
-            $auth = new pAuth($j->{'id'}, $j->{'email'}, $j->{'password'}, $j->{'provider'}, (isset($j->{'duid'}) ? $j->{'duid'} : null));
+            $auth = new pAuth((isset($j->{'id'}) ? $j->{'id'} : null ), $j->{'email'}, $j->{'password'}, $j->{'provider'}, $j->{'client_type'}, (isset($j->{'duid'}) ? $j->{'duid'} : null));
             return $auth;
         }
 

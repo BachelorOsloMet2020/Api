@@ -32,8 +32,8 @@
                     $out->data = $res['id'];
                 else
                 {
-                    $out->message = "Token not valid to retrieve data for user with id:".$userId;
-                    $out->error_message = "Token:".$token." is not valid with the user with user_id:".$userId;
+                    //$out->message = "Token not valid to retrieve data for user with id:".$userId;
+                    //$out->error_message = "Token:".$token." is not valid with the user with user_id:".$userId;
                 }
             }
             else
@@ -239,13 +239,13 @@
             else
             {
                 /** User exists */
-                $queryText = "UPDATE userprofile
-                SET firstName = ?,
-                SET lastName = ?,
-                SET image = ?,
-                SET address = ?,
-                SET postNumber = ?,
-                SET phone = ?
+                $queryText = "UPDATE userprofile SET
+                firstName = ?,
+                lastName = ?,
+                image = ?,
+                address = ?,
+                postNumber = ?,
+                phone = ?
                 WHERE id = ?";
                 $stmt = $this->db->prepare($queryText);
                 $stmt->bind_param("ssssisi", 
@@ -254,15 +254,23 @@
                     $profile->image,
                     $profile->address,
                     $profile->postNumber,
-                    $profile->phone,
+                    $profile->phoneNumber,
                     $profile->id);
                 $status = $stmt->execute();
-                if ($stauts == false || $stmt->affected_rows == 0)
+                if ($status == false)
                 {
                     $out->status = false;
                     $out->message = "Failed to update profile";
                     $out->error_message = $stmt->error;
+                    error_log("database error: " . $this->db->error);
                 }
+                else if ($stmt->affected_rows == 0)
+                {
+                    // No changes applied
+                    $out->status = true;
+                    $out->message = "No changes were made";
+                }
+                
 
                 $stmt->free_result();
                 $stmt->close();
@@ -276,7 +284,7 @@
 
             if ($success && $stmt->affected_rows == 0)
             {
-                $out->message .= "| Email is not changed";
+                //$out->message .= "| Email is not changed";
             }
             else if ($stmt->affected_rows >= 1)
             {

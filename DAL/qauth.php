@@ -69,6 +69,47 @@
         }
 
         /**
+         * newEmailAuthId
+         * Requires pAuth Object
+         */
+        public function newEmailAuthId($p)
+        {
+            $out = new stdClass();
+            $out->status = true;
+
+            $queryText = "INSERT INTO auth (oAuthId, email, password, provider) VALUES (?, ? ,?, ?)";
+            $stmt = $this->db->prepare($queryText);
+            $stmt->bind_param("isss", $p->id, $p->email, $p->password, $p->provider);
+            $stmt->execute();
+
+            if ($stmt->affected_rows == 1)
+            {
+                $out->status = true;
+            }
+            else
+            {
+                $out->status = false;
+                if ($stmt->errno == 1062)
+                {
+                    // Duplicate
+                    $out->message = "The email is already registered with another sign in method"; //"Eposten er allerede registrert med en annen innloggins metode";
+                    $out->error_message = $stmt->error;
+                }
+                else
+                {
+                    // Unknown
+                    $out->error_message = $stmt->error;
+                }
+
+                
+                
+            }
+            return $out;
+        }
+
+
+
+        /**
          * getPassword
          * Requires email
          */
@@ -232,7 +273,7 @@
             $affected_rows = 0;
 
             $time = (new DateTime())->getTimestamp();
-            $session_token = md5(uniqid($o->getId()));
+            $session_token = md5(uniqid($p->getId()));
 
             if ($p->getDeviceId() != null)
             {
@@ -265,8 +306,10 @@
                 clientType = VALUES(clientType),
                 provider = VALUES(provider)
                 ";
+                $clientType = $p->getClientType();
+                $provider = $p->getProvider();
                 $stmt = $this->db->prepare($queryText);
-                $stmt->bind_param("isiss", $authId, $session_token, $time, $p->getClientType(), $p->getProvider());
+                $stmt->bind_param("isiss", $authId, $session_token, $time, $clientType, $provider);
                 $stmt->execute();
 
                 $affected_rows = $stmt->affected_rows;

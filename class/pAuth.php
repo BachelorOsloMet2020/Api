@@ -23,17 +23,23 @@
         public $provider;
 
         /**
+         * $client_type = type of device or software (Android|Web|iOS)
+         */
+        public $client_type;
+
+        /**
          * $device_Id
          */
         public $device_Id;
 
 
-        function __construct($id, $email, $password, $provider, $device_id)
+        function __construct($id, $email, $password, $provider, $client_type, $device_id)
         {
             $this->id = (isset($id) ? $id : crc32($email));
             $this->email = $email;
             $this->password = hash('sha256', $password);
             $this->provider = $provider;
+            $this->client_type = $client_type;
             $this->device_Id = $device_id;
         }
 
@@ -52,6 +58,14 @@
         function getProvider()
         {
             return $this->provider;
+        }
+        function getClientType()
+        {
+            return $this->client_type;
+        }
+        function getDeviceId()
+        {
+            return $this->device_Id;
         }
 
 

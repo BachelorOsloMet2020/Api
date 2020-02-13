@@ -11,6 +11,7 @@
     {
 
         /**
+         * $data - Raw data from database query for processing
          * getPrivateProfile
          * Requires only raw data ex: array with profile data
          */
@@ -105,6 +106,8 @@
         /**
          * getPrivateProfile_FromJson
          * $data = raw json string
+         * 
+         * *** MIGHT NEED TO RENAME THIS ***
          */
         public function getPrivateProfile_FromJson($data)
         {
@@ -130,9 +133,12 @@
             {
                 $imageName = md5($profile->email.$profile->firstName.$profile->lastName);
                 $Up = new Upload($imageName, $this);
-                $profile->image = $Up->image;
-                $out->status = $Up->status;
-                if ($Up->status == false)
+                $uploaded = $Up->handleFileUpload();
+                if ($uploaded->status = true)
+                {
+                    $profile->image = $uploaded->url;
+                }
+                else
                 {
                     $out->error_message = $Up->message;
                 }
