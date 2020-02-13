@@ -117,13 +117,7 @@
             if ($result->num_rows == 1)
             {
                 $res = $result->fetch_assoc();
-                if ($res['sessionToken'] == $token)
-                    $out->data = $res;
-                else
-                {
-                    $out->message = "Token not valid to retrieve data for user with id:".$authId;
-                    $out->error_message = "Token:".$token." is not valid with the user with user_id:".$authId;
-                }
+                $out->data = $res;
             }
             else
             {
