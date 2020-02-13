@@ -210,7 +210,7 @@
                 $queryText = "INSERT INTO userprofile (authId, firstName, lastName, image, address, postNumber, phone) 
                                             VALUES    (     ?,         ?,        ?,     ?,       ?,          ?,     ?)";
                 $stmt = $this->db->prepare($queryText);
-                $stmt->bind_param("issssis", 
+                $stmt->bind_param("issssss", 
                     $profile->authId, 
                     $profile->firstName, 
                     $profile->lastName, 
@@ -242,7 +242,7 @@
                 phone = ?
                 WHERE id = ?";
                 $stmt = $this->db->prepare($queryText);
-                $stmt->bind_param("ssssisi", 
+                $stmt->bind_param("ssssssi", 
                     $profile->firstName, 
                     $profile->lastName,
                     $profile->image,
