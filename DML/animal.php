@@ -1,6 +1,7 @@
 <?php
 
     require_once './class/animalProfile.php';
+    require_once './Upload.php';
 
     class animal
     {
@@ -28,6 +29,7 @@
                     $i['image'],
                     isset($i['idTag,']) ? $i['idTag,'] : null,
                     $i['animalType'],
+                    $i['animalTypeExtras'],
                     $i['sex'],
                     $i['sterilized'],
                     $i['color'],
@@ -59,6 +61,7 @@
                 (!isset($j->{'imageType'}) || ($j->{'imageType'} == "url") ? $j->{'image'} : null),
                 $j->{'idTag'},
                 $j->{'animalType'},
+                $j->{'extras'},
                 $j->{'sex'},
                 $j->{'sterilized'},
                 $j->{'color'},
@@ -84,6 +87,7 @@
                     $out->status = false;
             }
             $out->animal = $animal;
+            //error_log("Temporary out; " . print_r($out, true));
             return $out;
         }
     }

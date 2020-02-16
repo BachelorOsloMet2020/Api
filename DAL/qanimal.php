@@ -74,7 +74,7 @@
             $out = new stdClass();
             $out->status = true;
 
-            if (!isset($uid))
+            if (!isset($animalProfile->userId))
             {
                 $out->status = false;
                 $out->message = "User id not present";
@@ -96,14 +96,19 @@
             $out = new stdClass();
             $out->status = true;
 
-            $queryText = "INSERT INTO animalprofile (userId, image, idTag, name, animalType, sex, sterilized, color, furLength, furPattern, description)";
+            $queryText = "INSERT INTO animalprofile (userId, image, idTag, name, animalType, animalTypeExtras, sex, sterilized, color, furLength, furPattern, description)
+                                             VALUES (     ?,     ?,     ?,    ?,          ?,                ?,   ?,           ?,    ?,         ?,          ?,           ?)";
             $stmt = $this->db->prepare($queryText);
-            $stmt->bind_param("isssiiisiis",
+            if (isset($this->db->error))
+                error_log("Database error: ". $this->db->error. " ########################");
+            //error_log("Stmt Error1:". $stmt->error);
+            $stmt->bind_param("isssisiisiis",
                 $animalProfile->userId,
                 $animalProfile->image,
                 $animalProfile->idTag,
                 $animalProfile->name,
                 $animalProfile->animalType,
+                $animalProfile->animalTypeExtras,
                 $animalProfile->sex,
                 $animalProfile->sterilized,
                 $animalProfile->color,
@@ -112,7 +117,10 @@
                 $animalProfile->description
             );
             $status = $stmt->execute();
-            if ($status == false || $stmt->affected_row == 0)
+            /*error_log("Database error: ". $this->db->error. "\r\n");
+            error_log("Stmt Error:". $stmt->error);*/
+            
+            if ($status == false || $stmt->affected_rows == 0)
             {
                 $out->status = false;
                 $out->error_message = $stmt->error;
@@ -125,29 +133,33 @@
             $out = new stdClass();
             $out->status = true;
 
-            $queryText = "UPDATE animalprofile
-            SET image,
-            SET idTag,
-            SET name,
-            SET animalType,
-            SET sex,
-            SET sterilized,
-            SET color,
-            SET furLength,
-            SET furPattern,
-            SET description";
+            $queryText = "UPDATE animalprofile SET 
+            image = ?,
+            idTag = ?,
+            name = ?,
+            animalType = ?,
+            animalTypeExtras = ?,
+            sex = ?,
+            sterilized = ?,
+            color = ?,
+            furLength = ?,
+            furPattern = ?,
+            description = ?
+            WHERE id = ?";
             $stmt = $this->db->prepare($queryText);
-            $stmt->bind_param("sssiiisiis",
+            $stmt->bind_param("sssisiisiisi",
                 $animalProfile->image,
                 $animalProfile->idTag,
                 $animalProfile->name,
                 $animalProfile->animalType,
+                $animalProfile->extras,
                 $animalProfile->sex,
                 $animalProfile->sterilized,
                 $animalProfile->color,
                 $animalProfile->furLength,
                 $animalProfile->furPattern,
-                $animalProfile->description
+                $animalProfile->description,
+                $animalProfile->id
             );
             $status = $stmt->execute();
             if ($status == false || $stmt->affected_row == 0)

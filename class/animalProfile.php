@@ -8,6 +8,7 @@
         public $image;
         public $idTag;
         public $animalType;
+        public $animalTypeExtras;
         public $sex;
         public $sterilized;
         public $color;
@@ -15,7 +16,7 @@
         public $furPattern;
         public $description;
 
-        function __construct($id, $userId, $name, $image, $idTag, $animalType, $sex, $sterilized, $color, $furLength, $furPattern, $description)
+        function __construct($id, $userId, $name, $image, $idTag, $animalType, $animalTypeExtras, $sex, $sterilized, $color, $furLength, $furPattern, $description)
         {
             $this->id = $id;
             $this->userId = $userId;
@@ -23,6 +24,7 @@
             $this->image = $image;
             $this->idTag = $idTag;
             $this->animalType = $animalType;
+            $this->animalTypeExtras = $animalTypeExtras;
             $this->sex = $sex;
             $this->sterilized = $sterilized;
             $this->color = $color;
