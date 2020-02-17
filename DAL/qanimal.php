@@ -133,6 +133,8 @@
             $out = new stdClass();
             $out->status = true;
 
+            error_log("Temp Out, " . print_r($animalProfile, true));
+
             $queryText = "UPDATE animalprofile SET 
             image = ?,
             idTag = ?,
@@ -152,7 +154,7 @@
                 $animalProfile->idTag,
                 $animalProfile->name,
                 $animalProfile->animalType,
-                $animalProfile->extras,
+                $animalProfile->animalTypeExtras,
                 $animalProfile->sex,
                 $animalProfile->sterilized,
                 $animalProfile->color,
@@ -162,7 +164,7 @@
                 $animalProfile->id
             );
             $status = $stmt->execute();
-            if ($status == false || $stmt->affected_row == 0)
+            if ($status == false || $stmt->affected_rows == 0)
             {
                 $out->status = false;
                 $out->error_message = $stmt->error;
