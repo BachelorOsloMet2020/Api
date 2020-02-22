@@ -8,12 +8,12 @@
  * Get requests are placed in separete file to reduce size of api.php
  * 
  */
-
+$raw = isset($_GET['raw']) ? $_GET['raw'] : null;
 switch ($_GET['request'])
 {
     case 'heartbeat':
     {
-        require './get/heartbeat.php';
+        require './DML/heartbeat.php';
         $o = new heartbeat();
         echo $o->getJson();
         break;
@@ -91,7 +91,6 @@ switch ($_GET['request'])
 
         require './DAL/qanimal.php';
         require './DML/animal.php';
-        
         $userId = isset($_GET['uid']) ? $_GET['uid'] : null;
         if ($userId == null)
         {
@@ -106,11 +105,37 @@ switch ($_GET['request'])
         $qa_r = $qa->getAnimalsByUid($userId);
         $ap = new animal();
         $animalProfiles = $ap->getAnimalProfiles($qa_r);
-        echo json_encode($animalProfiles);
-
+        if ($raw == null)
+            echo json_encode($animalProfiles);
+        else
+            print_r($animalProfiles);
         break;
     }
-
+    case 'missing':
+    {
+        require './DAL/qmissing.php';
+        require './DML/missing.php';
+        
+        $out = null;
+        $qm = new qmissing($db);
+        $mp = new missing();
+        $missingId = isset($_GET['id']) ? $_GET['id'] : null;
+        if ($missingId == null)
+        {
+            $data = $qm->getMissing();
+            $out = $mp->getMissings($data);
+        }
+        else 
+        {
+            $data = $qm->getMissingById($missingId);
+            $out = $mp->getMissing($data);
+        }
+        if ($raw == null)
+            echo json_encode($out);
+        else
+            print_r($out);
+        break;
+    }
 }
 
 ?>
