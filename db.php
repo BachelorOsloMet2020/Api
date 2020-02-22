@@ -38,7 +38,7 @@
         case "mysql":
         {
             $db = new mysqli($address, $username, $password, $database); //mysqli_connect($address, $username, $password, $database);
-            $db->set_charset("utf8");
+            $db->set_charset("utf8mb4");
             break;
         }
 
