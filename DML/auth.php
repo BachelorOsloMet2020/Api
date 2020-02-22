@@ -118,14 +118,14 @@
         public function endSession($aid, $token)
         {
             $out = new stdClass();
-            if (!isset($token) || !isset($aid))
+            if (isset($token) && isset($aid))
             {
                 // Echo missing data
-                $out->status = false;
+                $out->status = true;
             }
             else
             {
-                $out->status = true;
+                $out->status = false;
             }
             return $out;
         }

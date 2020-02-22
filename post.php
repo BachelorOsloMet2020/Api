@@ -115,6 +115,30 @@ if (isset($_POST['auth']))
             break;
         }
 
+        case 'endSession':
+        {
+            $auhtId = isset($_REQUEST['authId']) ? $_REQUEST['authId'] : null;
+            $token = isset($_REQUEST['token']) ? $_REQUEST['token'] : null;
+
+            $auth = new auth();
+            $status = $auth->endSession($auhtId, $token);
+            if ($status->status == true)
+            {
+                $qa = new qauth($db);
+                $out = $qa->endSession($auhtId, $token);
+                echo json_encode($out);
+            }
+            else
+            {
+                $array =  array(
+                    "status" => false,
+                    "message" => "Values missing"
+                );
+                echo json_encode($array);
+            }
+            break;
+        }
+
     }
 }
 else
