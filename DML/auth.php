@@ -115,10 +115,19 @@
             return $out;
         }
 
-
-        public function validateToken()
+        public function endSession($aid, $token)
         {
-            
+            $out = new stdClass();
+            if (!isset($token) || !isset($aid))
+            {
+                // Echo missing data
+                $out->status = false;
+            }
+            else
+            {
+                $out->status = true;
+            }
+            return $out;
         }
         
 

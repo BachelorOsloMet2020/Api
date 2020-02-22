@@ -86,6 +86,10 @@
             return $this->device_id;
         }
 
+        function getAppId()
+        {
+            return $this->app_id;
+        }
     }
 
 ?>

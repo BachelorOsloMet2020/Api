@@ -136,6 +136,26 @@
             return $out;
         }
 
+        public function endSession($authId, $token)
+        {
+            $out = new stdClass();
+            $out->status = true;
+
+            $queryText = "DELETE FROM session WHERE authId = ? AND sessionToken = ?;";
+            $stmt = $this->db->prepare($queryText);
+            $stmt->bind_param("is", $authId, $token);
+            $stmt->execute();
+            
+            if ($stmt->affected_rows == 1)
+            {
+                $out->message = "Session has been ended";
+            }
+            else
+            {
+                $out->message = "Failed to end session";
+            }
+            return $out;
+        }
 
         /**
          * getSession
