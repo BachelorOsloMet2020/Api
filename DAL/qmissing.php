@@ -60,7 +60,7 @@
             return $out;
         }
 
-        public function postMissing($session, $missing)
+        public function postMissing($authId, $token, $missing)
         {
             $out = new stdClass();
             $out->status = true;
@@ -71,13 +71,18 @@
             INNER JOIN animalprofile ON userprofile.id = animalprofile.userId
             WHERE auth.id = ? AND animalprofile.id = ? AND session.sessionToken = ?";
             $stmt = $this->db->prepare($authQuery);
-            $stmt->bind_param("iis", $session->id, $missing->animalId, $session->token);
+            $stmt->bind_param("iis", $authId, $missing->animalId, $token);
             $stmt->execute();
             $result = $stmt->get_result();
+            error_log("postMissing rows".$result->num_rows);
             if ($result->num_rows != 1)
             {
                 $out->status = false;
                 $out->message = "Validation query returned 0 or more than 1 user";
+                $out->error_message = $stmt->error;
+                
+                error_log("postMissing-missing -> ".print_r($missing, true));
+                error_log("postMissing -> ".$this->db->error);
                 return $out;
             }
             $stmt->free_result();

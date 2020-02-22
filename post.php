@@ -198,6 +198,37 @@ else
                 break;
             }
         }
+        case "missing":
+        {
+            require './DAL/qmissing.php';
+            require './DML/missing.php';
+            
+            $out = null;
+            $qm = new qmissing($db);
+            $mp = new missing();
+
+            $authId = isset($_POST['authId']) ? $_POST['authId'] : null;
+            $token = isset($_POST['token']) ? $_POST['token'] : null;
+            $data = isset($_POST['data']) ? $_POST['data'] : null;
+
+            
+            if ($authId == null || $token == null || $data == null)
+            {
+                $out = array(
+                    "status" => false,
+                    "message" => "Values required to perform post request was not present"
+                );
+            }
+            else
+            {
+                $mi = $mp->postMissing($data);
+                $out = $qm->postMissing($authId, $token, $mi->data);
+            }
+
+
+            echo json_encode($out);
+            break;
+        }
 
     }
 }

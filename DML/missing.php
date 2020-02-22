@@ -85,6 +85,7 @@
                 $j->{'timeDate'},
                 $j->{'area'}
             );
+            $out->data = $m;
             return $out;
         }
 
