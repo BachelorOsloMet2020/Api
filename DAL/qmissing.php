@@ -28,7 +28,7 @@
             }
             else
             {
-                $out->data = $result;
+                $out->data = $result->fetch_assoc();;
             }
 
             /** Cleaning up */

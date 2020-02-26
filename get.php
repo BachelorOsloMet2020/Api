@@ -127,8 +127,22 @@ switch ($_GET['request'])
         }
         else 
         {
+            require './DAL/qprofile.php';
+            require './DML/profile.php';
+
             $data = $qm->getMissingById($missingId);
-            $out = $mp->getMissing($data);
+            $animal = $mp->getMissing($data);
+
+
+            $QP = new qprofile($db);
+            $QP_R = $QP->getSinglePublicProfile($animal->data->userId);
+            $PP = new profile();
+            $profile = $PP->getSinglePublicProfile($QP_R);
+
+            $out = new stdClass();
+            $out->status = $animal->status;
+            $out->animal = $animal->data;
+            $out->profile = $profile->profile;
         }
         if ($raw == null)
             echo json_encode($out);

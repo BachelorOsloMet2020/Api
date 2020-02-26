@@ -47,6 +47,7 @@
                 $out->status = false;
                 $out->message = "Data from sql query is not present";
             }
+            //print_r($data);
             $_i = $data->data;
             $m = new fMissing(
                 $_i['missingId'],
