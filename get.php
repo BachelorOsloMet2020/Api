@@ -131,17 +131,17 @@ switch ($_GET['request'])
             require './DML/profile.php';
 
             $data = $qm->getMissingById($missingId);
-            $animal = $mp->getMissing($data);
+            $missing = $mp->getMissing($data);
 
 
             $QP = new qprofile($db);
-            $QP_R = $QP->getSinglePublicProfile($animal->data->userId);
+            $QP_R = $QP->getSinglePublicProfile($missing->data->userId);
             $PP = new profile();
             $profile = $PP->getSinglePublicProfile($QP_R);
 
             $out = new stdClass();
-            $out->status = $animal->status;
-            $out->animal = $animal->data;
+            $out->status = $missing->status;
+            $out->missing = $missing->data;
             $out->profile = $profile->profile;
         }
         if ($raw == null)

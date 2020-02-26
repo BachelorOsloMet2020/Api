@@ -7,6 +7,7 @@
         public $lng;
         public $timeDate;
         public $animalId;
+        public $idTag;
         public $userId;
         public $name;
         public $image;
@@ -20,13 +21,14 @@
         public $description;
         public $area;
 
-        function __construct($missingId, $lat, $lng, $timeDate, $animalId, $userId, $name, $image, $animalType, $animalTypeExtras, $sex, $sterilized, $color, $furLength, $furPattern, $description, $area)
+        function __construct($missingId, $lat, $lng, $timeDate, $animalId, $idTag, $userId, $name, $image, $animalType, $animalTypeExtras, $sex, $sterilized, $color, $furLength, $furPattern, $description, $area)
         {
             $this->missingId = $missingId;
             $this->lat = $lat;
             $this->lng = $lng;
             $this->timeDate = $timeDate;
             $this->animalId = $animalId;
+            $this->idTag = $idTag;
             $this->userId = $userId;
             $this->name = $name;
             $this->image = $image;

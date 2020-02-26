@@ -55,6 +55,7 @@
                 $_i['lng'],
                 $_i['timeDate'],
                 $_i['animalId'],
+                $_i['idTag'],
                 $_i['userId'],
                 $_i['name'],
                 $_i['image'],
