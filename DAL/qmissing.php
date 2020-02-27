@@ -14,7 +14,7 @@
             $out->status = true;
 
             $queryText = "SELECT missing.id AS missingId, missing.lat, missing.lng, missing.timeDate,
-            profile.id AS animalId, userId, image, idTag, name, animalType, animalTypeExtras, sex, sterilized, color, furLength, furPattern, description, area
+            profile.id AS animalId, profile.userId, image, idTag, name, animalType, animalTypeExtras, sex, sterilized, color, furLength, furPattern, description, area
             FROM missing
             INNER JOIN animalprofile AS profile ON missing.animalId = profile.id WHERE missing.id = ?;";
             $stmt = $this->db->prepare($queryText);
