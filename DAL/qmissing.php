@@ -88,10 +88,10 @@
             $stmt->free_result();
             $stmt->close();
             
-            $queryText = "INSERT INTO missing (animalId, Lat, Lng, timeDate, area)
-            VALUES ( ?, ?, ?, ?, ? );";
+            $queryText = "INSERT INTO missing (animalId, userId, Lat, Lng, timeDate, area)
+            VALUES ( ?, ?, ?, ?, ?, ? );";
             $stmt = $this->db->prepare($queryText);
-            $stmt->bind_param("iddis", $missing->animalId, $missing->lat, $missing->lng, $missing->timeDate, $missing->area);
+            $stmt->bind_param("iiddis", $missing->animalId, $missing->userId, $missing->lat, $missing->lng, $missing->timeDate, $missing->area);
             $success = $stmt->execute();
             if (!$success || $stmt->affected_rows == 0)
             {

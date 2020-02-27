@@ -82,6 +82,7 @@
             $j = json_decode($data);
             $m = new pMissing(
                 $j->{'animalId'},
+                $j->{'userId'},
                 $j->{'lat'},
                 $j->{'lng'},
                 $j->{'timeDate'},
