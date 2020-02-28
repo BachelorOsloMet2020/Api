@@ -36,7 +36,7 @@
         function __construct($id, $email, $password, $provider, $client_type, $device_id)
         {
             $this->id = (isset($id) ? $id : crc32($email));
-            $this->email = $email;
+            $this->email = strtolower($email);
             $this->password = hash('sha256', $password);
             $this->provider = $provider;
             $this->client_type = $client_type;

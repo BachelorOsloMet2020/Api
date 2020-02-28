@@ -53,7 +53,7 @@
         function __construct($id, $email, $token, $provider, $client_type, $app_id, $device_id)
         {
             $this->id = $id;
-            $this->email = $email;
+            $this->email = strtolower($email);
             $this->token = $token;
             $this->provider = $provider;
             $this->client_type = $client_type;
