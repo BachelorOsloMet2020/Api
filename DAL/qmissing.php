@@ -28,7 +28,7 @@
             }
             else
             {
-                $out->data = $result->fetch_assoc();;
+                $out->data = $result->fetch_assoc();
             }
 
             /** Cleaning up */
@@ -59,6 +59,37 @@
 
             return $out;
         }
+
+        public function getMyMissing($uid)
+        {
+            $out = new stdClass();
+            $out->status = true;
+
+            $queryText = "SELECT missing.id AS missingId, missing.lat, missing.lng, missing.timeDate,
+            profile.id AS animalId, image, name, animalType, animalTypeExtras, color, area
+            FROM missing
+            INNER JOIN animalprofile AS profile ON missing.animalId = profile.id WHERE missing.userId = ?";
+            $stmt = $this->db->prepare($queryText);
+            $stmt->bind_param("i", $uid);
+            $ex = $stmt->execute();
+            $result = $stmt->get_result();
+            if (false === $ex || false == $stmt)
+            {
+                $out->status = false;
+                $out->error_message = $stmt->error;
+            }
+            else
+            {
+                $out->data = $result->fetch_all(MYSQLI_ASSOC);
+            }
+
+            /** Cleaning up */
+            $stmt->free_result();
+            $stmt->close();
+
+            return $out;
+        }
+
 
         public function postMissing($authId, $token, $missing)
         {

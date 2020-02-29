@@ -4,14 +4,15 @@
     {
         public function getMissings($data)
         {
-            //print_r($data);
+            //var_dump($data);
             require_once './class/sMissing.php';
             $out = new stdClass();
             $out->status = true;
-            if (!isset($data) || !isset($data->data))
+            if (!isset($data) || !isset($data->data) || $data == null)
             {
                 $out->status = false;
                 $out->message = "Data from sql query is not present";
+                return $out;
             }
             $array = array();
             foreach ($data->data as $i) 

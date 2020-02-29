@@ -150,6 +150,65 @@ switch ($_GET['request'])
             print_r($out);
         break;
     }
+    case 'myPosters':
+    {
+        if (isTokenValid($db))
+        {   
+            require './DAL/qmissing.php';
+            require './DML/missing.php';
+
+            require './DAL/qfound.php';
+            require './DML/found.php';
+
+            $out = new stdClass();
+
+            $uid = isset($_GET['uid']) ? $_GET['uid'] : null;
+
+            $qm = new qmissing($db);
+            $missings = $qm->getMyMissing($uid);
+
+            $qf = new qfound($db);
+            $founds = $qf->getMyFound($uid);
+
+            if (isset($missings) && $missings != null)
+            {
+                $_m = new missing();
+                $_missing = $_m->getMissings($missings);
+                if (isset($_missing))
+                {
+                    $missing = new stdClass();
+                    $missing->data = $_missing->data;
+                    $out->missing = $missing;
+                }
+            }
+
+            if (isset($founds) && $founds != null)
+            {
+                $_f = new found();
+                $_found = $_f->getFounds($founds);
+                if (isset($_found))
+                {
+                    $found = new stdClass();
+                    $found->data = $_found->data;
+                    $out->found = $found;
+                }
+            }
+
+            echo json_encode($out);
+
+        }   
+        else
+        {
+            echo json_encode(array(
+                "status" => false,
+                "message" => "Request for myProfile was attempted with invalid or missing token"
+            ));
+        }
+        break;
+    }
+
+
+
 }
 
 ?>
