@@ -26,6 +26,27 @@
             return $out;
         }
 
+        public function getFound($data)
+        {
+            require_once './class/fFound.php';
+            $out = new stdClass();
+            $out->status = true;
+            if (!isset($data) || !isset($data->data))
+            {
+                $out->status = false;
+                $out->message = "Data from sql query is not present";
+            }
+            $i = $data->data;
+            if (isset($i['animalId']) || $i['animalId'] !== null)
+                $out->data = $this->get_ap_Found($i);
+            else if (isset($i['foundAnimalId']) || $i['foundAnimalId'] !== null)
+                $out->data = $this->get_fa_Found($i);
+            return $out;
+        }
+
+
+
+
         private function get_fa_Found($o)
         {
             require_once './class/fFound.php';

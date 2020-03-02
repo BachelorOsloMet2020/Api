@@ -150,6 +150,51 @@ switch ($_GET['request'])
             print_r($out);
         break;
     }
+    case 'found':
+    {
+        require './DAL/qfound.php';
+        require './DML/found.php';
+
+        $out = new stdClass();
+
+        $qf = new qfound($db);
+        $fm = new found();
+        $foundId = isset($_GET['id']) ? $_GET['id'] : null;
+
+        if ($foundId == null)
+        {
+            $data = $qf->getFound();
+            $out = $fm->getFounds($data);
+        }
+        else 
+        {
+            require './DAL/qprofile.php';
+            require './DML/profile.php';
+
+            $data = $qf->getFoundById($foundId);
+            $found = $fm->getFound($data);
+
+
+            $QP = new qprofile($db);
+            $QP_R = $QP->getSinglePublicProfile($found->data->userId);
+            $PP = new profile();
+            $profile = $PP->getSinglePublicProfile($QP_R);
+
+            
+            $out = new stdClass();
+            $out->status = $found->status;
+            $out->found = $found->data;
+            $out->profile = $profile->profile;
+
+            
+        }
+        if ($raw == null)
+            echo json_encode($out);
+        else
+            print_r($out);
+
+        break;
+    }
     case 'myPosters':
     {
         if (isTokenValid($db))
