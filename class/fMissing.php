@@ -20,8 +20,9 @@
         public $furPattern;
         public $description;
         public $area;
+        public $mdesc;
 
-        function __construct($missingId, $lat, $lng, $timeDate, $animalId, $idTag, $userId, $name, $image, $animalType, $animalTypeExtras, $sex, $sterilized, $color, $furLength, $furPattern, $description, $area)
+        function __construct($missingId, $lat, $lng, $timeDate, $animalId, $idTag, $userId, $name, $image, $animalType, $animalTypeExtras, $sex, $sterilized, $color, $furLength, $furPattern, $description, $area, $mdesc)
         {
             $this->missingId = $missingId;
             $this->lat = $lat;
@@ -41,6 +42,7 @@
             $this->furPattern = $furPattern;
             $this->description = $description;
             $this->area = $area;
+            $this->mdesc = $mdesc;
         }
     }
 

@@ -68,7 +68,8 @@
                 $_i['furLength'],
                 $_i['furPattern'],
                 $_i['description'],
-                $_i['area']
+                $_i['area'],
+                $_i['mdesc']
             );
             $out->data = $m;
             return $out;
@@ -87,7 +88,8 @@
                 $j->{'lat'},
                 $j->{'lng'},
                 $j->{'timeDate'},
-                $j->{'area'}
+                $j->{'area'},
+                $j->{'description'}
             );
             $out->data = $m;
             return $out;

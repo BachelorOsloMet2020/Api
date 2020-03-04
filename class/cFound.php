@@ -1,5 +1,5 @@
 <?php
-    class fFound
+    class cFound
     {
         public $foundId;
         public $lat;
@@ -20,6 +20,7 @@
         public $furLength;
         public $furPattern;
         public $description;
+        public $fdesc;
 
         function __construct(
             $foundId, 
@@ -40,7 +41,8 @@
             $color,
             $furLength,
             $furPattern,
-            $description)
+            $description,
+            $fdesc)
             {
                 $this->foundId = $foundId;
                 $this->lat = $lat;
@@ -61,6 +63,7 @@
                 $this->furLength = $furLength;
                 $this->furPattern = $furPattern;
                 $this->description = $description;
+                $this->fdesc = $fdesc;
             }
     }
 ?>

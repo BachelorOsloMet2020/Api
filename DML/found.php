@@ -4,7 +4,7 @@
     {
         public function getFounds($data)
         {
-            require_once './class/fFound.php';
+            require_once './class/cFound.php';
             $out = new stdClass();
             $out->status = true;
             if (!isset($data) || !isset($data->data))
@@ -28,7 +28,7 @@
 
         public function getFound($data)
         {
-            require_once './class/fFound.php';
+            require_once './class/cFound.php';
             $out = new stdClass();
             $out->status = true;
             if (!isset($data) || !isset($data->data))
@@ -49,8 +49,8 @@
 
         private function get_fa_Found($o)
         {
-            require_once './class/fFound.php';
-            return new fFound(
+            require_once './class/cFound.php';
+            return new cFound(
                 $o['foundId'],
                 $o['Lat'],
                 $o['Lng'],
@@ -69,14 +69,15 @@
                 $o['fa_color'],
                 $o['fa_furLength'],
                 $o['fa_furPattern'],
-                $o['fa_description']
+                $o['fa_description'],
+                (isset($o['fdesc']) ? $o['fdesc'] : null)
             );
         }
 
         private function get_ap_Found($o)
         {
-            require_once './class/fFound.php';
-            return new fFound(
+            require_once './class/cFound.php';
+            return new cFound(
                 $o['foundId'],
                 $o['Lat'],
                 $o['Lng'],
@@ -96,7 +97,8 @@
                 $o['ap_color'],
                 $o['ap_furLength'],
                 $o['ap_furPattern'],
-                $o['ap_description']
+                $o['ap_description'],
+                (isset($o['fdesc']) ? $o['fdesc'] : null)
             );
         }
 

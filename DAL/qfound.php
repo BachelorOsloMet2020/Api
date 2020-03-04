@@ -143,6 +143,7 @@
             found.Lng,
             found.timeDate,
             found.area,
+            found.description AS fdesc,
 
             fa.id AS fa_id,
             fa.image AS fa_image,
@@ -191,6 +192,51 @@
             $stmt->close();
             
             return $out;
+        }
+
+
+
+        public function deleteFound($authId, $token, $userId, $foundId)
+        {
+            $out = new stdClass();
+            $out->status = false;
+
+            $queryText = "SELECT auth.email, profile.* FROM userprofile AS profile 
+            INNER JOIN session ON profile.authId = session.authId
+            INNER JOIN auth ON auth.id = profile.authId
+            WHERE profile.id = ? AND profile.authId = ? AND session.sessionToken = ?;";
+
+            $stmt =  $this->db->prepare($queryText);
+            $stmt->bind_param("iis", $authId, $token);
+            $stmt->execute();
+
+            $result = $stmt->get_result();
+
+            /** Cleaning up */
+            $stmt->free_result();
+            $stmt->close();
+
+            if ($result->num_rows != 1)
+            {
+                return $out;
+            }
+
+            $queryText = "DELETE FROM found WHERE where id = ? AND userId = ?";
+            $stmt = $this->db->prepare($queryText);
+            $stmt->bind_param("ii", $foundId, $userId);
+            $success = $stmt->execute();
+            if ($success || $stmt->affected_rows != 0)
+            {
+                $out->status = true;
+                $out->message = "";
+                return $out;
+            }
+            else 
+            {
+                $out->status = false;
+                $out->message = "Failed to delete";
+                return $out;
+            }
         }
 
     }

@@ -13,8 +13,8 @@
             $out = new stdclass();
             $out->status = true;
 
-            $queryText = "SELECT missing.id AS missingId, missing.lat, missing.lng, missing.timeDate,
-            profile.id AS animalId, profile.userId, image, idTag, name, animalType, animalTypeExtras, sex, sterilized, color, furLength, furPattern, description, area
+            $queryText = "SELECT missing.id AS missingId, missing.lat, missing.lng, missing.timeDate, missing.description AS mdesc,
+            profile.id AS animalId, profile.userId, image, idTag, name, animalType, animalTypeExtras, sex, sterilized, color, furLength, furPattern, profile.description, area
             FROM missing
             INNER JOIN animalprofile AS profile ON missing.animalId = profile.id WHERE missing.id = ?;";
             $stmt = $this->db->prepare($queryText);
@@ -44,7 +44,7 @@
             $out->status = true;
 
             $queryText = "SELECT missing.id AS missingId, missing.lat, missing.lng, missing.timeDate,
-            profile.id AS animalId, image, name, animalType, animalTypeExtras, color, area
+            profile.id AS animalId, image, name, animalType, animalTypeExtras, color, area, missing.description AS mdesc
             FROM missing
             INNER JOIN animalprofile AS profile ON missing.animalId = profile.id;";
             $query = $this->db->query($queryText);
@@ -66,7 +66,7 @@
             $out->status = true;
 
             $queryText = "SELECT missing.id AS missingId, missing.lat, missing.lng, missing.timeDate,
-            profile.id AS animalId, image, name, animalType, animalTypeExtras, color, area
+            profile.id AS animalId, image, name, animalType, animalTypeExtras, color, area, missing.description AS mdesc
             FROM missing
             INNER JOIN animalprofile AS profile ON missing.animalId = profile.id WHERE missing.userId = ?";
             $stmt = $this->db->prepare($queryText);
@@ -89,6 +89,50 @@
 
             return $out;
         }
+
+        public function deleteMissing($authId, $token, $userId, $missingId)
+        {
+            $out = new stdClass();
+            $out->status = false;
+
+            $queryText = "SELECT auth.email, profile.* FROM userprofile AS profile 
+            INNER JOIN session ON profile.authId = session.authId
+            INNER JOIN auth ON auth.id = profile.authId
+            WHERE profile.id = ? AND profile.authId = ? AND session.sessionToken = ?;";
+
+            $stmt =  $this->db->prepare($queryText);
+            $stmt->bind_param("iis", $authId, $token);
+            $stmt->execute();
+
+            $result = $stmt->get_result();
+
+            /** Cleaning up */
+            $stmt->free_result();
+            $stmt->close();
+
+            if ($result->num_rows != 1)
+            {
+                return $out;
+            }
+
+            $queryText = "DELETE FROM missing WHERE where id = ? AND userId = ?";
+            $stmt = $this->db->prepare($queryText);
+            $stmt->bind_param("ii", $missingId, $userId);
+            $success = $stmt->execute();
+            if ($success || $stmt->affected_rows != 0)
+            {
+                $out->status = true;
+                $out->message = "";
+                return $out;
+            }
+            else 
+            {
+                $out->status = false;
+                $out->message = "Failed to delete";
+                return $out;
+            }
+        }
+
 
 
         public function postMissing($authId, $token, $missing)
@@ -119,10 +163,10 @@
             $stmt->free_result();
             $stmt->close();
             
-            $queryText = "INSERT INTO missing (animalId, userId, Lat, Lng, timeDate, area)
-            VALUES ( ?, ?, ?, ?, ?, ? );";
+            $queryText = "INSERT INTO missing (animalId, userId, Lat, Lng, timeDate, area, description)
+            VALUES ( ?, ?, ?, ?, ?, ?, ? );";
             $stmt = $this->db->prepare($queryText);
-            $stmt->bind_param("iiddis", $missing->animalId, $missing->userId, $missing->lat, $missing->lng, $missing->timeDate, $missing->area);
+            $stmt->bind_param("iiddiss", $missing->animalId, $missing->userId, $missing->lat, $missing->lng, $missing->timeDate, $missing->area, $missing->mdesc);
             $success = $stmt->execute();
             if (!$success || $stmt->affected_rows == 0)
             {
