@@ -207,7 +207,7 @@
             WHERE profile.id = ? AND profile.authId = ? AND session.sessionToken = ?;";
 
             $stmt =  $this->db->prepare($queryText);
-            $stmt->bind_param("iis", $authId, $token);
+            $stmt->bind_param("iis", $userId, $authId, $token);
             $stmt->execute();
 
             $result = $stmt->get_result();
@@ -221,7 +221,7 @@
                 return $out;
             }
 
-            $queryText = "DELETE FROM found WHERE where id = ? AND userId = ?";
+            $queryText = "DELETE FROM found WHERE id = ? AND userId = ?";
             $stmt = $this->db->prepare($queryText);
             $stmt->bind_param("ii", $foundId, $userId);
             $success = $stmt->execute();

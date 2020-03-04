@@ -93,7 +93,7 @@
         public function deleteMissing($authId, $token, $userId, $missingId)
         {
             $out = new stdClass();
-            $out->status = false;
+            $out->status = true;
 
             $queryText = "SELECT auth.email, profile.* FROM userprofile AS profile 
             INNER JOIN session ON profile.authId = session.authId
@@ -101,21 +101,29 @@
             WHERE profile.id = ? AND profile.authId = ? AND session.sessionToken = ?;";
 
             $stmt =  $this->db->prepare($queryText);
-            $stmt->bind_param("iis", $authId, $token);
+            $stmt->bind_param("iis", $userId, $authId, $token);
             $stmt->execute();
 
             $result = $stmt->get_result();
 
+            if ($result->num_rows != 1)
+            {
+                $out->data = "auhtId: ".$authId. " :: userId: ".$userId. " :: missingId: ".$missingId." :: token: ".$token;
+                $out->status = false;
+                $out->numRows = $result->num_rows;
+                $out->debugStmt = $stmt->error;
+                $out->debugDb = $this->db->error;
+            }
             /** Cleaning up */
             $stmt->free_result();
             $stmt->close();
 
-            if ($result->num_rows != 1)
+            if ($out->status == false)
             {
                 return $out;
             }
 
-            $queryText = "DELETE FROM missing WHERE where id = ? AND userId = ?";
+            $queryText = "DELETE FROM missing WHERE id = ? AND userId = ?";
             $stmt = $this->db->prepare($queryText);
             $stmt->bind_param("ii", $missingId, $userId);
             $success = $stmt->execute();

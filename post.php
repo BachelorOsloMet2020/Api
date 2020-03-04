@@ -230,6 +230,40 @@ else
             break;
         }
 
+        case "delete_missing":
+        {
+            require './DAL/qmissing.php';
+            $qm = new qmissing($db);
+
+            $authId = isset($_POST['authId']) ? $_POST['authId'] : null;
+            $token = isset($_POST['token']) ? $_POST['token'] : null;
+            $userId = isset($_POST['userId']) ? $_POST['userId'] : null;
+            $missingId = isset($_POST['missingId']) ? $_POST['missingId'] : null;
+
+            $out = $qm->deleteMissing($authId, $token, $userId, $missingId);
+
+            echo json_encode($out);
+
+            break;
+        }
+
+        case "delete_found":
+        {
+            require './DAL/qfound.php';
+            $qf = new qfound($db);
+
+            $authId = isset($_POST['authId']) ? $_POST['authId'] : null;
+            $token = isset($_POST['token']) ? $_POST['token'] : null;
+            $userId = isset($_POST['userId']) ? $_POST['userId'] : null;
+            $missingId = isset($_POST['missingId']) ? $_POST['missingId'] : null;
+
+            $out = $qf->deleteFound($authId, $token, $userId, $missingId);
+
+            echo json_encode($out);
+
+            break;
+        }
+
     }
 }
 
