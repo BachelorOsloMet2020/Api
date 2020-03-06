@@ -230,6 +230,40 @@ else
             break;
         }
 
+        case "found":
+        {
+            require './DAL/qfound.php';
+            require './DML/found.php';
+            $out = null;
+
+            $authId = isset($_POST['authId']) ? $_POST['authId'] : null;
+            $token = isset($_POST['token']) ? $_POST['token'] : null;
+            $data = isset($_POST['data']) ? $_POST['data'] : null;
+
+            $qf = new qfound();
+            $fp = new found();
+
+            if ($authId == null || $token == null || $data == null)
+            {
+                $out = array(
+                    "status" => false,
+                    "message" => "Values required to perform post request was not present"
+                );
+            }
+            else
+            {
+                $fi = $fp->postFound($data);
+                $out = $qf->postFound($authId, $token, $fi->data);
+            }
+
+
+            echo json_encode($out);
+            
+
+            break;
+        }
+        
+
         case "delete_missing":
         {
             require './DAL/qmissing.php';

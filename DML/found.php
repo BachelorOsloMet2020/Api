@@ -102,6 +102,38 @@
             );
         }
 
+        public function postFound($data)
+        {
+            require_once './class/cFound.php';
+            $out = new stdClass();
+            $out->status = true;
+            $j = json_decode($data);
+            $f = new cFound(
+                null,
+                $j->{'lat'},
+                $j->{'lng'},
+                $j->{'timeDate'},
+                $j->{'area'},
+                (isset($j->{'animalId'}) ? $j->{'animalId'} : null),
+                null,
+                $j->{'userid'},
+                (isset($j->{'image'}) ? $j->{'image'} : null),
+                (isset($j->{'idTag'}) ? $j->{'idTag'} : null),
+                (isset($j->{'name'}) ? $j->{'name'} : null),
+                $j->{'animalType'},
+                (isset($j->{'animalTypeExtras'}) ? $j->{'animalTypeExtras'} : null),
+                $j->{'sex'},
+                $j->{'sterilized'},
+                $j->{'color'},
+                $j->{'furLength'},
+                $j->{'furPattern'},
+                (isset($j->{'description'}) ? $j->{'description'} : null),
+                $j->{'fdesc'}
+            );
+            $out->data = $f;
+            return $out;
+        }
+
 
 
     }

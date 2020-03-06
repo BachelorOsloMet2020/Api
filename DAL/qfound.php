@@ -239,6 +239,94 @@
             }
         }
 
+        public function postFound($authId, $token, $found)
+        {
+            $out = new stdClass();
+            $out->status = true;
+
+            $queryText = "SELECT auth.email, profile.* FROM userprofile AS profile 
+            INNER JOIN session ON profile.authId = session.authId
+            INNER JOIN auth ON auth.id = profile.authId
+            WHERE profile.authId = ? AND session.sessionToken = ?;";
+
+            $stmt = $this->db->prepare($queryText);
+            $stmt->bind_param("is", $authId, $token);
+            $stmt->execute();
+
+            $result = $stmt->get_result();
+
+            if ($result->num_rows != 1)
+            {
+                $out->status = false;
+            }
+            /** Cleaning up */
+            $stmt->free_result();
+            $stmt->close();
+
+            if ($out->status == false)
+            {
+                return $out;
+            }
+
+            $data = null;
+            if ($found->ai == null)
+                $out = $this->postFoundWithAnimal($found);
+
+            $out = $this->postOnlyFound($found);
+                
+            return $out;
+        }
+
+        private function postFoundWithAnimal(&$found)
+        {
+            $out = new stdClass();
+            $out->status = true;
+
+            $query = "INSERT INTO foundAnimal (image, animalType, animalTypeExtras, sex, color, furLength, furPattern, description)
+                                    VALUES    (  ?,     ?,          ?,              ?,      ?,      ?,      ?,          ?)";
+            $stmt = $this->db->prepare($query);
+            $stmt->bind_param('sisisiis', $found->image, $found->animalType, $found->animalTypeExtras, $found->sex, $found->color, $found->furLength, $found->furPattern, $found->description);
+            $stmt->execute();
+            $newId = $stmt->insert_id;
+            $found->fi = $newId;
+
+            if (!$success || $stmt->affected_rows == 0)
+            {
+                $out->status = false;
+                $out->message = "Failed to upload";
+            }
+
+            return $out;
+
+        }
+
+        private function postOnlyFound(&$found)
+        {
+            $out = new stdClass();
+            $out->status = true;
+
+            $fa = "INSERT INTO found (animalId, foundAnimalId, userId, Lat, Lng, timeDate, area, description)
+                            VALUES (     ?,           ?,         ?,    ?,   ?,       ?,     ?,       ?)";
+            $stmt = $this->db->prepare($fa);
+            $stmt->bind_param("iiiddiss", $found->ai, $found->fi, $found->userId, $found->lat, $found->lng, $found->timeDate, $found->area, $found->fdesc);
+            $success = $stmt->execute();
+            
+            if (!$success || $stmt->affected_rows == 0)
+            {
+                $out->status = false;
+                $out->message = "Failed to upload";
+                
+            }
+
+
+            /** Cleaning up */
+            $stmt->free_result();
+            $stmt->close();
+
+            return $out;
+        }
+        
+
     }
 
 ?>
