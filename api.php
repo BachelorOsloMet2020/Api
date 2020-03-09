@@ -4,7 +4,7 @@
     error_reporting(E_ALL);
     
     require_once "./db.php";
-
+    require_once './errc.php';
 
 
     /**

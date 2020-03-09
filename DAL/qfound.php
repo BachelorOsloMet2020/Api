@@ -59,6 +59,7 @@
             if (false === $ex || false == $stmt)
             {
                 $out->status = false;
+                $out->err = __err["0x23"];
             }
             else
             {
@@ -119,6 +120,7 @@
             if (false === $query)
             {
                 $out->status = false;
+                $out->err = __err["0x17"];
             }
             else
             {
@@ -181,6 +183,7 @@
             if (false === $ex || false == $stmt)
             {
                 $out->status = false;
+                $out->err = __err["0x24"];
             }
             else
             {
@@ -234,7 +237,8 @@
             else 
             {
                 $out->status = false;
-                $out->message = "Failed to delete";
+                $out->err = __err["0x25"];
+                //$out->message = "Failed to delete";
                 return $out;
             }
         }
@@ -258,6 +262,7 @@
             if ($result->num_rows != 1)
             {
                 $out->status = false;
+                $out->err = __err["0x13"];
             }
             /** Cleaning up */
             $stmt->free_result();
@@ -265,6 +270,7 @@
 
             if ($out->status == false)
             {
+                $out->err = __err["0x26"];
                 return $out;
             }
 
@@ -293,7 +299,8 @@
             if (!$success || $stmt->affected_rows == 0)
             {
                 $out->status = false;
-                $out->message = "Failed to upload";
+                $out->err = __err["0x26"];
+                //$out->message = "Failed to upload";
             }
 
             return $out;
@@ -314,7 +321,8 @@
             if (!$success || $stmt->affected_rows == 0)
             {
                 $out->status = false;
-                $out->message = "Failed to upload";
+                $out->err = __err["0x26"];
+                //$out->message = "Failed to upload";
                 
             }
 

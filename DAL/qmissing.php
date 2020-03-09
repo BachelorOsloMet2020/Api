@@ -25,6 +25,7 @@
             if (false === $ex || false == $stmt)
             {
                 $out->status = false;
+                $out->err = __err["0x19"];
             }
             else
             {
@@ -51,6 +52,7 @@
             if (false === $query)
             {
                 $out->status = false;
+                $out->err = __err["0x17"];
             }
             else
             {
@@ -76,7 +78,8 @@
             if (false === $ex || false == $stmt)
             {
                 $out->status = false;
-                $out->error_message = $stmt->error;
+                $out->err = __err["0x20"];
+                //$out->error_message = $stmt->error;
             }
             else
             {
@@ -120,6 +123,7 @@
 
             if ($out->status == false)
             {
+                $out->err = __err["0x13"];
                 return $out;
             }
 
@@ -136,7 +140,7 @@
             else 
             {
                 $out->status = false;
-                $out->message = "Failed to delete";
+                $out->err = __err["0x21"];
                 return $out;
             }
         }
@@ -161,6 +165,7 @@
             if ($result->num_rows != 1)
             {
                 $out->status = false;
+                $out->err = __err["0x13"];
                 $out->message = "Validation query returned 0 or more than 1 user";
                 $out->error_message = $stmt->error;
                 
@@ -179,7 +184,8 @@
             if (!$success || $stmt->affected_rows == 0)
             {
                 $out->status = false;
-                $out->message = "Failed to upload";
+                $out->err = __err["0x22"];
+                //$out->message = "Failed to upload";
                 return $out;
             }
             $out->message = "Animal Reported missing";

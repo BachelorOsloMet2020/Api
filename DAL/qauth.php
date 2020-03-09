@@ -31,8 +31,15 @@
             else
             {
                 $out->status = false;
-                $out->error_message = (($result->num_rows > 1) ? "oAuthId matches more than one row! Something is wrong in the database" : 
-                                                                 "Could not find an entry with the provided oAuthId");
+                if ($result->num_rows > 1)
+                {
+                    $out->err = __err["0x4"];
+                    error_log("Failure in database, duplicate entrys for oAuthId: " . $oAuthId);
+                }
+                else 
+                {
+                    $out->err = __err['0x3'];
+                }
             }
             return $out;
         }
@@ -63,7 +70,8 @@
             else
             {
                 $out->status = false;
-                $out->error_message = $stmt->error;
+                $out->err = __err["0x2"];
+                //$out->error_message = $stmt->error;
             }
             return $out;
         }
@@ -92,13 +100,14 @@
                 if ($stmt->errno == 1062)
                 {
                     // Duplicate
-                    $out->message = "The email is already registered with another sign in method"; //"Eposten er allerede registrert med en annen innloggins metode";
-                    $out->error_message = $stmt->error;
+                    $out->err = __err["0x1"];
+                    //$out->message = "The email is already registered with another sign in method"; //"Eposten er allerede registrert med en annen innloggins metode";
+                    //$out->error_message = $stmt->error;
                 }
                 else
                 {
                     // Unknown
-                    $out->error_message = $stmt->error;
+                    $out->err = __err["0x2"];
                 }
 
                 
@@ -131,7 +140,7 @@
             else
             {
                 $out->status = false;
-                $out->error_message = $stmt->error;
+                $out->err = __err["0x5"];
             }
             return $out;
         }
@@ -152,7 +161,8 @@
             }
             else
             {
-                $out->message = "Failed to end session";
+                $out->err = __err['0x6'];
+                //$out->error_message = $stmt->error;
             }
             return $out;
         }
@@ -183,7 +193,8 @@
             {
                 $out->status = false;
                 $out->isValid = false;
-                $out->error_message = $stmt->error;
+                $out->err = __err["0x7"];
+                //$out->error_message = $stmt->error;
             }
             return $out;
 
@@ -234,7 +245,8 @@
                 else
                 {
                     $out->status = false;
-                    $out->error_message = $stmt->error;
+                    $out->err = __err["0x8"];
+                    //$out->error_message = $stmt->error;
                 }
 
                 $stmt->free_result();
@@ -271,7 +283,8 @@
                 else
                 {
                     $out->status = false;
-                    $out->error_message = $stmt->error;
+                    $out->err = __err["0x8"];
+                    //$out->error_message = $stmt->error;
                 }
 
                 $stmt->free_result();
@@ -351,7 +364,8 @@
             else
             {
                 $out->status = false;
-                $out->error_message = $stmt->error;
+                $out->err = __err["0x8"];
+                //$out->error_message = $stmt->error;
             }
             return $out;
         }

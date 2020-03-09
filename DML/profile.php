@@ -23,7 +23,7 @@
             if (!isset($data) || !isset($data->data))
             {
                 $out->status = false;
-                $out->message = "Data is not provided";
+                $out->err = __err["0x16"];
                 return $out;
             }
             $_data = $data->data;
@@ -54,8 +54,8 @@
             else
             {
                 $out->status = false;
-                $out->message = "Values are incomplete";
-                $out->error_message = "Data or values are missing in order to complete the requrest for a privateProfile object";
+                $out->err = __err["0x16"];
+                //$out->error_message = "Data or values are missing in order to complete the requrest for a privateProfile object";
             }
             return $out;
         }
@@ -72,7 +72,7 @@
             if (!isset($data) || !isset($data->data))
             {
                 $out->status = false;
-                $out->message = "Data is not provided";
+                $out->err = __err["0x16"];
                 return $out;
             }
             $_data = $data->data;
@@ -97,8 +97,8 @@
             else
             {
                 $out->status = false;
-                $out->message = "Values are incomplete";
-                $out->error_message = "Data or values are missing in order to complete the requrest for a publicProfile object";
+                $out->err = __err["0x16"];
+                //$out->error_message = "Data or values are missing in order to complete the requrest for a publicProfile object";
             }
             return $out;
         }

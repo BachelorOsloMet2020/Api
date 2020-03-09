@@ -170,7 +170,7 @@ else
             {
                 echo json_encode(array(
                     "status" => false,
-                    "message" => "Request for myProfile was attempted with invalid or missing token"
+                    "err" => __err["0x12"]
                 ));
             }
             break;
@@ -216,7 +216,7 @@ else
             {
                 $out = array(
                     "status" => false,
-                    "message" => "Values required to perform post request was not present"
+                    "err" => __err["0x12"]
                 );
             }
             else
@@ -247,7 +247,7 @@ else
             {
                 $out = array(
                     "status" => false,
-                    "message" => "Values required to perform post request was not present"
+                    "err" => __err["0x12"]
                 );
             }
             else

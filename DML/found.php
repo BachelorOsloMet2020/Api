@@ -10,7 +10,7 @@
             if (!isset($data) || !isset($data->data))
             {
                 $out->status = false;
-                $out->message = "Data from sql query is not present";
+                $out->err = __err["0x16"];
             }
             $array = array();
             foreach($data->data as $i)
@@ -34,7 +34,7 @@
             if (!isset($data) || !isset($data->data))
             {
                 $out->status = false;
-                $out->message = "Data from sql query is not present";
+                $out->err = __err["0x16"];
             }
             $i = $data->data;
             if (isset($i['animalId']) || $i['animalId'] !== null)

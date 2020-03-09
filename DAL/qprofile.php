@@ -77,14 +77,17 @@
                     $out->data = $res;
                 else
                 {
-                    $out->message = "Token not valid to retrieve data for user with id:".$userId;
-                    $out->error_message = "Token:".$token." is not valid with the user with user_id:".$userId;
+                    $out->status = false;
+                    $out->err = __err["0x12"];
+                    //$out->message = "Token not valid to retrieve data for user with id:".$userId;
+                    //$out->error_message = "Token:".$token." is not valid with the user with user_id:".$userId;
                 }
             }
             else
             {
                 $out->status = false;
-                $out->message = "No record found";
+                $out->err = __err["0x13"];
+                //$out->message = "No record found";
             }
 
             /** Cleaning up */
@@ -122,7 +125,8 @@
             else
             {
                 $out->status = false;
-                $out->message = "No record found";
+                $out->err = __err["0x13"];
+                //$out->message = "No record found";
             }
 
             /** Cleaning up */
@@ -158,7 +162,8 @@
             else
             {
                 $out->status = false;
-                $out->message = "No record found";
+                $out->err = __err["0x12"];
+                //$out->message = "No record found";
             }
 
             /** Cleaning up */
@@ -223,8 +228,9 @@
                 if (!$success || $stmt->affected_rows == 0)
                 {
                     $out->status = false;
-                    $out->message = "Failed to create profile";
-                    $out->error_message = $stmt->error;
+                    $out->err = __err["0x14"];
+                    //$out->message = "Failed to create profile";
+                    //$out->error_message = $stmt->error;
                 }
 
                 $stmt->free_result();
@@ -286,8 +292,9 @@
             }
             else
             {
-                $out->message .= "| Email failed to update";
-                $out->error_message .= " | " . $stmt->error;
+                $out->err = __err["0x15"];
+                //$out->message .= "| Email failed to update";
+                //$out->error_message .= " | " . $stmt->error;
             }
             return $out;
 

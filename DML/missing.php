@@ -11,7 +11,7 @@
             if (!isset($data) || !isset($data->data) || $data == null)
             {
                 $out->status = false;
-                $out->message = "Data from sql query is not present";
+                $out->err = __err["0x16"];
                 return $out;
             }
             $array = array();
@@ -46,7 +46,7 @@
             if (!isset($data) || !isset($data->data))
             {
                 $out->status = false;
-                $out->message = "Data from sql query is not present";
+                $out->err = __err["0x16"];
             }
             //print_r($data);
             $_i = $data->data;

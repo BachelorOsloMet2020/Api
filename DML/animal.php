@@ -16,7 +16,7 @@
             if (!isset($data) || !isset($data->data))
             {
                 $out->status = false;
-                $out->message = "Data is not provided";
+                $out->err = __err["0x16"];
                 return $out;
             }
             $array = array();

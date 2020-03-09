@@ -42,7 +42,7 @@ switch ($_GET['request'])
         {
             echo json_encode(array(
                 "status" => false,
-                "message" => "Request for myProfile was attempted with invalid or missing token"
+                "err" => __err["0x12"]
             ));
         }
         break;
@@ -246,7 +246,7 @@ switch ($_GET['request'])
         {
             echo json_encode(array(
                 "status" => false,
-                "message" => "Request for myProfile was attempted with invalid or missing token"
+                "err" => __err["0x12"]
             ));
         }
         break;

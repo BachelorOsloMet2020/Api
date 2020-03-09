@@ -27,6 +27,7 @@
             else
             {
                 $out->status = false;
+                $out->err = __err["0x17"];
             }
             
 
@@ -55,6 +56,7 @@
             else
             {
                 $out->status = false;
+                $out->err = __err["0x17"];
             }
             
 
@@ -77,7 +79,7 @@
             if (!isset($animalProfile->userId))
             {
                 $out->status = false;
-                $out->message = "User id not present";
+                $out->err = __err["0x16"];
                 return $out;
             }
 
@@ -123,7 +125,8 @@
             if ($status == false || $stmt->affected_rows == 0)
             {
                 $out->status = false;
-                $out->error_message = $stmt->error;
+                $out->err = __err["0x18"];
+                //$out->error_message = $stmt->error;
             }
             return $out;
         }
@@ -167,7 +170,8 @@
             if ($status == false || $stmt->affected_rows == 0)
             {
                 $out->status = false;
-                $out->error_message = $stmt->error;
+                $out->err = __err["0x18"];
+                //$out->error_message = $stmt->error;
             }
             return $out;
         }

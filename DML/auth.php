@@ -64,8 +64,9 @@
             else
             {
                 $out->status = false;
-                $out->message = "Challenging Facebook login failed";
-                $out->error_message = "Challenge was rejected due to token validity, user or application mismatch";
+                $out->err = __err["0x10"];
+                //$out->message = "Challenging Facebook login failed";
+                //$out->error_message = "Challenge was rejected due to token validity, user or application mismatch";
             }
             return $out;
         }
@@ -85,8 +86,9 @@
             else
             {
                 $out->status = false;
-                $out->message = "Challenging Google login failed";
-                $out->error_message = "Challenge was rejected due to token validity, user mismatch";
+                $out->err = __err["0x11"];
+                //$out->message = "Challenging Google login failed";
+                //$out->error_message = "Challenge was rejected due to token validity, user mismatch";
             }
             return $out;
         }
@@ -96,8 +98,10 @@
             $out = new stdClass();
             if (!isset($auth) || $qa->status == false)
             {
-                $out->status = false;  $out->message = "Values are not present";
-                $out->error_message = ((!isset($auth)) ? "Password Authentication object is not defined or empty" : "Query is not completed or faulty");  return $out;
+                $out->status = false;  
+                $out->err = __err["0x9"];
+                //$out->message = "Values are not present";
+                //$out->error_message = ((!isset($auth)) ? "Password Authentication object is not defined or empty" : "Query is not completed or faulty");  return $out;
             }
             else
             {
@@ -109,7 +113,8 @@
                 else
                 {
                     $out->status = false;
-                    $out->message = "Email or password mismatch";
+                    $out->err = __err["0x9"];
+                    //$out->message = "Email or password mismatch";
                 }
             }
             return $out;
