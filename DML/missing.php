@@ -89,7 +89,7 @@
                 $j->{'lng'},
                 $j->{'timeDate'},
                 $j->{'area'},
-                $j->{'description'}
+                $j->{'mdesc'}
             );
             $out->data = $m;
             return $out;

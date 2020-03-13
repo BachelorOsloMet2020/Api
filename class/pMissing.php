@@ -11,8 +11,9 @@
         public $userId;
         public $animalId;
         public $area;
+        public $mdesc;
 
-        function __construct($animalId, $userId, $lat, $lng, $timeDate, $area)
+        function __construct($animalId, $userId, $lat, $lng, $timeDate, $area, $mdesc)
         {
             $this->lat = $lat;
             $this->lng = $lng;
@@ -20,6 +21,7 @@
             $this->animalId = $animalId;
             $this->userId = $userId;
             $this->area = $area;
+            $this->mdesc = $mdesc;
         }
 
 
