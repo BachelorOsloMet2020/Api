@@ -123,7 +123,7 @@
                 $j->{'animalType'},
                 (isset($j->{'animalTypeExtras'}) ? $j->{'animalTypeExtras'} : null),
                 $j->{'sex'},
-                $j->{'sterilized'},
+                null,
                 $j->{'color'},
                 $j->{'furLength'},
                 $j->{'furPattern'},

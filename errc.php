@@ -27,7 +27,7 @@
         "0x24" => array( "errc" => "0x24", "errm" => "Could not find found post"),
         "0x25" => array( "errc" => "0x25", "errm" => "Unable to delete your found post"),
         "0x26" => array( "errc" => "0x26", "errm" => "Unable to create found post"),
-        "0x27" => array( "errc" => "0x27", "errm" => ""),
+        "0x27" => array( "errc" => "0x27", "errm" => "Email is required"),
         "0x28" => array( "errc" => "0x28", "errm" => ""),
         "0x29" => array( "errc" => "0x29", "errm" => ""),
     );
