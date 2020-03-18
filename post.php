@@ -222,6 +222,7 @@ else
             else
             {
                 $mi = $mp->postMissing($data);
+                error_log("Decoede data -> " . print_r($mi, true));
                 $out = $qm->postMissing($authId, $token, $mi->data);
             }
 
@@ -240,7 +241,7 @@ else
             $token = isset($_POST['token']) ? $_POST['token'] : null;
             $data = isset($_POST['data']) ? $_POST['data'] : null;
 
-            $qf = new qfound();
+            $qf = new qfound($db);
             $fp = new found();
 
             if ($authId == null || $token == null || $data == null)
