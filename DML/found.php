@@ -130,6 +130,24 @@
                 (isset($j->{'description'}) ? $j->{'description'} : null),
                 $j->{'fdesc'}
             );
+
+            if ($f->image == null && $j->{'imageType'} == "file")
+            {
+                // Do file upload
+            }
+            else if ($f->image == null && $j->{'imageType'} == "base64")
+            {
+                $imageName = md5($f->userId.$f->color);
+                $upload = new Upload($imageName, $this);
+                $up = $upload->handleByteStream($j->{'image'});
+                if ($up->status == true)
+                {
+                    $f->image = $up->url;
+                }
+                else
+                    $out->status = false;
+            }
+
             $out->data = $f;
             return $out;
         }

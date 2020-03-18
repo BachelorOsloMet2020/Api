@@ -300,6 +300,7 @@
             {
                 $out->status = false;
                 $out->err = __err["0x26"];
+                error_log("Error in stmt -> " . $stmt->error);
                 //$out->message = "Failed to upload";
             }
 
