@@ -287,12 +287,26 @@
         {
             $out = new stdClass();
             $out->status = true;
-
+            /*error_log("
+            
+            
+            
+            
+            ");
+            error_log("################################################################################################################");
+            error_log("
+            
+            
+            
+            
+            ");*/
+            //error_log("Data -> ".print_r($found, true));
             $query = "INSERT INTO foundAnimal (name, image, animalType, animalTypeExtras, sex, color, furLength, furPattern, description)
-                                    VALUES    (  ?,     ?,          ?,              ?,      ?,      ?,      ?,          ?)";
+                                    VALUES    (  ?,     ?,          ?,              ?,      ?,      ?,      ?,          ?,    ?)";
             $stmt = $this->db->prepare($query);
             $stmt->bind_param('ssisisiis', $found->name, $found->image, $found->animalType, $found->animalTypeExtras, $found->sex, $found->color, $found->furLength, $found->furPattern, $found->description);
-            $stmt->execute();
+            //error_log("Error in stmt -> " . $stmt->error);
+            $success = $stmt->execute();
             $newId = $stmt->insert_id;
             $found->fi = $newId;
 

@@ -1,5 +1,5 @@
 <?php
-
+    require_once './Upload.php';
     class found
     {
         public function getFounds($data)
@@ -114,10 +114,10 @@
                 $j->{'lng'},
                 $j->{'timeDate'},
                 $j->{'area'},
-                (isset($j->{'animalId'}) ? $j->{'animalId'} : null),
+                ( (isset($j->{'animalId'}) && $j->{'animalId'} > 0) ? $j->{'animalId'} : null),
                 null,
-                $j->{'userid'},
-                (isset($j->{'image'}) ? $j->{'image'} : null),
+                $j->{'userId'},
+                (!isset($j->{'imageType'}) || ($j->{'imageType'} == "url") ? $j->{'image'} : null),
                 (isset($j->{'idTag'}) ? $j->{'idTag'} : null),
                 (isset($j->{'name'}) ? $j->{'name'} : null),
                 $j->{'animalType'},
