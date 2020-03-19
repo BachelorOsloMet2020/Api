@@ -20,7 +20,7 @@
                 $this->imagePath = "../" . __images_dir . "profile/";
                 $this->imageFolder = "profile/";
             }
-            else if ($type instanceof animal)
+            else if ($type instanceof animal || $type instanceof found)
             {
                 $this->imagePath = "../" . __images_dir . "animal/";
                 $this->imageFolder = "animal/";
