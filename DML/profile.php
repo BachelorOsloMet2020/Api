@@ -120,7 +120,7 @@
             $profile = new privateProfile(
                 (isset($j->{'id'}) ? $j->{'id'} : null),
                 $j->{'authId'},
-                $j->{'email'},
+                (!isset($j->{'email'}) ? $j->{'email'} : null),
                 (!isset($j->{'imageType'}) || ($j->{'imageType'} == "url") ? $j->{'image'} : null),
                 $j->{'firstName'},
                 $j->{'lastName'},
@@ -131,7 +131,7 @@
 
             if ($profile->image == null && $j->{'imageType'} == "file")
             {
-                $imageName = md5($profile->email.$profile->firstName.$profile->lastName);
+                $imageName = md5($profile->authId.$profile->firstName.$profile->lastName);
                 $Up = new Upload($imageName, $this);
                 $uploaded = $Up->handleFileUpload();
                 if ($uploaded->status = true)
@@ -146,7 +146,7 @@
             }
             else if ($profile->image == null && $j->{'imageType'} == "base64")
             {
-                $imageName = md5($profile->email.$profile->firstName.$profile->lastName);
+                $imageName = md5($profile->authId.$profile->firstName.$profile->lastName);
 
                 $imgPath = "profile/" . $imageName . ".png";
                 $fullPath = "../" . __images_dir . $imgPath;

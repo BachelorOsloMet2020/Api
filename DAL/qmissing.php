@@ -171,6 +171,8 @@
                 
                 error_log("postMissing-missing -> ".print_r($missing, true));
                 error_log("postMissing -> ".$this->db->error);
+                if (isset($stmt->error))
+                    error_log("Api Error -> ". $stmt->error);
                 return $out;
             }
             $stmt->free_result();
