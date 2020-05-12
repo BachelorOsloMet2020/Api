@@ -277,24 +277,27 @@
             }
 
             /** Update email */
-            $queryText = "UPDATE auth SET email = ? WHERE id = ?";
-            $stmt = $this->db->prepare($queryText);
-            $stmt->bind_param("si", $profile->email, $profile->authId);
-            $success = $stmt->execute();
-
-            if ($success && $stmt->affected_rows == 0)
+            if ($profile->email != null && isset($profile->email))
             {
-                //$out->message .= "| Email is not changed";
-            }
-            else if ($stmt->affected_rows >= 1)
-            {
-                $out->message .= "; Email has been updated";
-            }
-            else
-            {
-                $out->err = __err["0x15"];
-                //$out->message .= "| Email failed to update";
-                //$out->error_message .= " | " . $stmt->error;
+                $queryText = "UPDATE auth SET email = ? WHERE id = ?";
+                $stmt = $this->db->prepare($queryText);
+                $stmt->bind_param("si", $profile->email, $profile->authId);
+                $success = $stmt->execute();
+    
+                if ($success && $stmt->affected_rows == 0)
+                {
+                    //$out->message .= "| Email is not changed";
+                }
+                else if ($stmt->affected_rows >= 1)
+                {
+                    $out->message .= "; Email has been updated";
+                }
+                else
+                {
+                    $out->err = __err["0x15"];
+                    //$out->message .= "| Email failed to update";
+                    //$out->error_message .= " | " . $stmt->error;
+                }
             }
             return $out;
 
