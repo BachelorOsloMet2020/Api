@@ -120,7 +120,7 @@
             $profile = new privateProfile(
                 (isset($j->{'id'}) ? $j->{'id'} : null),
                 $j->{'authId'},
-                (!isset($j->{'email'}) ? $j->{'email'} : null),
+                (isset($j->{'email'}) ? $j->{'email'} : null),
                 (!isset($j->{'imageType'}) || ($j->{'imageType'} == "url") ? $j->{'image'} : null),
                 $j->{'firstName'},
                 $j->{'lastName'},
