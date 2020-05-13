@@ -302,8 +302,10 @@ else
         case "delete_me":
         {
             require './DML/auth.php';
+            require './DAL/qprofile.php';
             if (isTokenValid($db))
             {
+                $data = isset($_REQUEST['data']) ? $_REQUEST['data'] : null;
                 $auth = new auth();
                 $sessionObject = $auth->to_sessionObject($data);
 
