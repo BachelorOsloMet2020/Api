@@ -5,7 +5,7 @@
         public function getMissings($data)
         {
             //var_dump($data);
-            require_once './class/sMissing.php';
+            require_once './class/fMissing.php';
             $out = new stdClass();
             $out->status = true;
             if (!isset($data) || !isset($data->data) || $data == null)
@@ -17,18 +17,26 @@
             $array = array();
             foreach ($data->data as $i) 
             {
-                $m = new sMissing(
+                $m = new fMissing(
                     $i['missingId'],
                     $i['lat'],
                     $i['lng'],
                     $i['timeDate'],
                     $i['animalId'],
+                    $i['idTag'],
+                    $i['userId'],
                     $i['name'],
                     $i['image'],
                     $i['animalType'],
                     $i['animalTypeExtras'],
+                    $i['sex'],
+                    $i['sterilized'],
                     $i['color'],
-                    $i['area']
+                    $i['furLength'],
+                    $i['furPattern'],
+                    $i['description'],
+                    $i['area'],
+                    $i['mdesc']
                 );
                 //print_r($m);
                 array_push($array, $m);

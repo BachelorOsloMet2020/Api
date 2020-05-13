@@ -299,6 +299,20 @@ else
             break;
         }
 
+        case "delete_me":
+        {
+            if (isTokenValid($db))
+            {
+                $auth = new auth();
+                $sessionObject = $auth->to_sessionObject($data);
+
+                $pdml = new qprofile($db);
+                $out = $pdml->forget_me($sessionObject);
+                echo json_encode($out);
+            }
+            break;
+        }
+
     }
 }
 

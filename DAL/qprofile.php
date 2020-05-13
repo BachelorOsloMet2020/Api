@@ -303,6 +303,44 @@
 
         }
 
+        public function forget_me($session)
+        {
+            $q1 = "DELETE FROM missing WHERE id = (SELECT id FROM userprofile WHERE authId = ?)";
+            $q2 = "DELETE FROM foundAnimal WHERE id = (SELECT foundAnimalId FROM found WHERE userId = (SELECT id FROM userprofile WHERE authId = ?))";
+            $q3 = "DELETE FROM found WHERE id = (SELECT id FROM userprofile WHERE authId = ?)";
+
+            $q4 = "DELETE FROM animalprofile WHERE userId = (SELECT id FROM userprofile WHERE authId = ?)";
+            $q5 = "DELETE FROM FROM userprofile WHERE authId = ?";
+            $q6 = "DELETE FROM session WHERE authId = ?";
+            $q7 = "DELETE FROM auth WHERE id = ?";
+
+            $array = array($q1, $q2, $q3, $q4, $q5, $q6, $q7);
+
+            $out = $this->execForgetMe($array);
+            return $out;
+        }
+
+        function execForgetMe($array)
+        {
+            $out = new stdClass();
+            $out->status = false;
+
+            for( $i = 0; $i < count($array); $i++ )
+            {
+                $stmt = $this->db->prepare($array[$i]);
+                $stmt->bind_param("i", $session->authId);
+                $status = $stmt->execute();
+                $stmt->close();
+    
+                if ($status == false)
+                {
+                    $out->err = __err["0x28"];
+                    return $out;
+                }
+            }
+            $out->status = true;
+            return $out;
+        }
 
 
     }

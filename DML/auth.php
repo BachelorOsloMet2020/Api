@@ -38,7 +38,7 @@
         {
             $j = json_decode($json);
             $session = new session(
-                $j->{'id'}, $j->{'session_token'}, $j->{'provider'}
+                $j->{'id'}, (isset($j->{'authId'}) ? $j->{'authId'} : null),  $j->{'session_token'}, $j->{'provider'}, (isset($j->{'time'}) ? $j->{'time'} : null)
             );
             return $session;
         }
