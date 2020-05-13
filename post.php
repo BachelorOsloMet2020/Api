@@ -301,6 +301,7 @@ else
 
         case "delete_me":
         {
+            require './DML/auth.php';
             if (isTokenValid($db))
             {
                 $auth = new auth();
