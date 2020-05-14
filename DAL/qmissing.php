@@ -67,8 +67,8 @@
             $out = new stdClass();
             $out->status = true;
 
-            $queryText = "SELECT missing.id AS missingId, missing.lat, missing.lng, missing.timeDate,
-            profile.id AS animalId, image, name, animalType, animalTypeExtras, color, area, missing.description AS mdesc
+            $queryText = "SELECT missing.id AS missingId, missing.lat, missing.lng, missing.timeDate, missing.description AS mdesc,
+            profile.id AS animalId, profile.userId, image, idTag, name, animalType, animalTypeExtras, sex, sterilized, color, furLength, furPattern, profile.description, area
             FROM missing
             INNER JOIN animalprofile AS profile ON missing.animalId = profile.id WHERE missing.userId = ?";
             $stmt = $this->db->prepare($queryText);
